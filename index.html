@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
@@ -14,10 +14,1431 @@
   <meta name="apple-mobile-web-app-title" content="水水小助理">
   
   <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="icon" type="image/png" href="./icons/favicon.png">
-  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="./favicon.png">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
   
-  <link rel="stylesheet" href="./styles.css">
+  <style>
+/* 
+  Fit21 水水小助理 - 核心樣式表
+  品牌色調：奶油米白 #FBF6EC、Fit21 深綠 #0F6E56、鼠尾草綠 #93A68D、清爽水藍、淡金色 #C9A86A
+  目標：適合 40~70 歲使用者，大字體、大按鈕、溫潤圓角、高對比易讀、零學習門檻
+*/
+
+:root {
+  --bg-cream: #FBF6EC;
+  --bg-card: #FFFFFF;
+  --bg-card-subtle: #F5EFE4;
+  --brand-green: #0F6E56;
+  --brand-green-hover: #0C5945;
+  --brand-green-light: #E4F1EC;
+  --sage-green: #93A68D;
+  --sage-green-light: #E8ECE6;
+  --water-blue: #4FA8DE;
+  --water-blue-dark: #2F88C0;
+  --water-blue-light: #EBF5FB;
+  --water-blue-surface: #D8EEF9;
+  --gold-accent: #C9A86A;
+  --gold-light: #F9F5EC;
+  --text-main: #1C332B;
+  --text-sub: #576F66;
+  --text-muted: #83978E;
+  --border-light: rgba(15, 110, 86, 0.12);
+  --shadow-sm: 0 4px 12px rgba(15, 110, 86, 0.05);
+  --shadow-md: 0 10px 28px rgba(15, 110, 86, 0.08);
+  --shadow-lg: 0 18px 40px rgba(15, 110, 86, 0.14);
+  --radius-sm: 14px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
+  --radius-full: 9999px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* 全域重設與防縮放 */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100%;
+  background-color: var(--bg-cream);
+  color: var(--text-main);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  font-size: 17px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* 手機容器 (Mobile First，居中最大 480px，電腦螢幕上呈現優雅手機外觀) */
+#app-container {
+  width: 100%;
+  max-width: 460px;
+  min-height: 100vh;
+  margin: 0 auto;
+  background-color: var(--bg-cream);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.04);
+  padding: calc(var(--safe-top) + 12px) 18px calc(var(--safe-bottom) + 28px) 18px;
+}
+
+/* 頂部標頭 */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding: 4px 2px;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-avatar-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+}
+
+.brand-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2.5px solid var(--brand-green);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.brand-avatar-btn:active .brand-avatar {
+  transform: scale(0.92);
+}
+
+.brand-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--brand-green);
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.brand-subtitle {
+  font-size: 13.5px;
+  color: var(--text-sub);
+  font-weight: 500;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--brand-green);
+  font-size: 20px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+}
+
+.icon-btn:active {
+  transform: scale(0.92);
+  background: var(--brand-green-light);
+}
+
+/* 小助理即時提醒氣泡 / 智慧叮嚀卡片 */
+.smart-reminder-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.smart-reminder-card.completed {
+  background: #F0F8F4;
+  border-color: #BBE1D4;
+}
+
+.smart-reminder-card.night-rest {
+  background: #F4F6F9;
+  border-color: #D3DFE8;
+}
+
+.reminder-avatar-small {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1.5px solid var(--brand-green);
+}
+
+.reminder-content {
+  flex: 1;
+}
+
+.reminder-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+
+.reminder-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--brand-green);
+}
+
+.reminder-badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  background: var(--sage-green-light);
+  color: var(--brand-green);
+  border-radius: var(--radius-full);
+  font-weight: 600;
+}
+
+.reminder-text {
+  font-size: 15px;
+  color: var(--text-main);
+  line-height: 1.45;
+  font-weight: 500;
+}
+
+/* 互動鼓勵浮動吐司 (操作後出現) */
+.toast-bubble {
+  position: fixed;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-10px);
+  background: var(--brand-green);
+  color: #FFFFFF;
+  padding: 10px 22px;
+  border-radius: var(--radius-full);
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: var(--shadow-md);
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toast-bubble.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* 中央水杯視覺主卡片 */
+.water-display-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 24px 20px 20px 20px;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 玻璃水杯容器 (圓潤大氣) */
+.glass-container {
+  width: 170px;
+  height: 220px;
+  background: #F4FAFD;
+  border: 4px solid #D2EBF8;
+  border-top: 5px solid #C1E4F5;
+  border-radius: 20px 20px 48px 48px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 2px 10px rgba(79, 168, 222, 0.12), 0 8px 24px rgba(79, 168, 222, 0.15);
+  margin-bottom: 18px;
+  cursor: pointer;
+}
+
+/* 水位主體 */
+.water-fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 0%;
+  background: linear-gradient(180deg, #74C0FC 0%, #4FA8DE 55%, #2F88C0 100%);
+  transition: height 0.8s cubic-bezier(0.34, 1.3, 0.64, 1);
+}
+
+/* 波浪動畫 */
+.wave-svg {
+  position: absolute;
+  top: -14px;
+  left: 0;
+  width: 200%;
+  height: 18px;
+  fill: #74C0FC;
+  animation: waveAnim 4s linear infinite;
+  opacity: 0.9;
+}
+
+.wave-svg.secondary {
+  top: -12px;
+  animation: waveAnim 3s linear infinite reverse;
+  opacity: 0.55;
+  fill: #A5D8FF;
+}
+
+@keyframes waveAnim {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* 玻璃高光反光效果 */
+.glass-reflection {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  width: 8px;
+  height: 80%;
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+/* 水杯刻度線 */
+.glass-marks {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  pointer-events: none;
+}
+
+.mark-line {
+  width: 10px;
+  height: 2px;
+  background: rgba(79, 168, 222, 0.35);
+  border-radius: 1px;
+}
+
+/* 水杯內數值層 (疊在水杯上方更直觀) */
+.glass-center-stat {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  text-align: center;
+  pointer-events: none;
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
+}
+
+.glass-percent {
+  font-size: 34px;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1;
+}
+
+/* 水量數值資訊 */
+.water-stats-info {
+  text-align: center;
+  width: 100%;
+}
+
+.stats-amount-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.stats-current {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--brand-green);
+  letter-spacing: -0.5px;
+}
+
+.stats-divider {
+  font-size: 22px;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.stats-target {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-sub);
+}
+
+.stats-unit {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-sub);
+  margin-left: 2px;
+}
+
+.stats-status-text {
+  font-size: 16px;
+  color: var(--text-sub);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.stats-status-badge {
+  background: var(--brand-green-light);
+  color: var(--brand-green);
+  padding: 3px 12px;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* 快速喝水按鈕區 (三大按鈕，專門適合 40~70 歲長輩與手機快速點擊) */
+.quick-log-section {
+  margin-bottom: 20px;
+}
+
+.section-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding: 0 4px;
+}
+
+.section-label {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-sub);
+}
+
+.undo-btn {
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: var(--sage-green);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+}
+
+.undo-btn:hover, .undo-btn:active {
+  background: var(--sage-green-light);
+  color: var(--brand-green);
+}
+
+.undo-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* 三個大按鈕網格 */
+.quick-buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.water-btn-large {
+  background: var(--bg-card);
+  border: 2px solid #E2EFE9;
+  border-radius: var(--radius-md);
+  padding: 16px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  min-height: 84px;
+}
+
+.water-btn-large:hover {
+  border-color: var(--brand-green);
+  background: #FCFEFD;
+}
+
+.water-btn-large:active {
+  transform: scale(0.94);
+  background: var(--brand-green-light);
+  border-color: var(--brand-green);
+}
+
+.btn-icon {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.btn-amount {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--brand-green);
+  letter-spacing: -0.5px;
+}
+
+.btn-unit {
+  font-size: 12px;
+  color: var(--text-sub);
+  font-weight: 600;
+}
+
+/* 自訂水量按鈕 (通欄大按鈕) */
+.custom-water-btn {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1.5px dashed var(--sage-green);
+  color: var(--brand-green);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.custom-water-btn:active {
+  background: var(--sage-green-light);
+  transform: scale(0.98);
+}
+
+/* 7天歷史水滴卡片 */
+.history-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 18px 16px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 20px;
+}
+
+.history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.history-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.history-caption {
+  font-size: 12.5px;
+  color: var(--text-sub);
+  font-weight: 500;
+}
+
+.history-drops-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.history-day-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.day-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-sub);
+}
+
+.history-day-item.today .day-label {
+  color: var(--brand-green);
+  font-weight: 800;
+}
+
+.drop-icon-wrapper {
+  width: 40px;
+  height: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+.drop-svg {
+  width: 32px;
+  height: 38px;
+  transition: fill 0.3s ease;
+}
+
+.drop-svg.completed {
+  fill: var(--water-blue);
+  filter: drop-shadow(0 3px 6px rgba(79, 168, 222, 0.4));
+}
+
+.drop-svg.incomplete {
+  fill: #E3EBE6;
+}
+
+.drop-percent-badge {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.history-footer-quote {
+  font-size: 13.5px;
+  color: var(--text-sub);
+  text-align: center;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(15, 110, 86, 0.1);
+  font-weight: 500;
+}
+
+/* 喝水小知識輪播卡片 */
+.knowledge-card {
+  background: var(--bg-card-subtle);
+  border: 1px solid rgba(201, 168, 106, 0.25);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.knowledge-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.knowledge-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--brand-green);
+  background: rgba(15, 110, 86, 0.08);
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+}
+
+.knowledge-refresh-btn {
+  background: none;
+  border: none;
+  font-size: 13px;
+  color: var(--text-sub);
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.knowledge-text {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--text-main);
+  font-weight: 500;
+}
+
+/* PWA 安裝橫幅提示 (非強迫，溫柔指引) */
+.pwa-install-banner {
+  background: #FFFDF9;
+  border: 1.5px solid var(--gold-accent);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.pwa-banner-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pwa-banner-icon {
+  font-size: 26px;
+}
+
+.pwa-banner-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--brand-green);
+}
+
+.pwa-banner-desc {
+  font-size: 12.5px;
+  color: var(--text-sub);
+}
+
+.pwa-install-btn {
+  background: var(--brand-green);
+  color: #FFF;
+  border: none;
+  padding: 8px 14px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* 頁尾品牌宣告與理念 */
+.app-footer {
+  text-align: center;
+  padding: 16px 0 8px 0;
+  margin-top: auto;
+}
+
+.footer-slogan {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--brand-green);
+  margin-bottom: 4px;
+}
+
+.footer-concept {
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+/* ─────────────────────────────
+   彈窗 / 模態框系統 (Modals)
+   ───────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 45, 35, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 999;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-sheet {
+  width: 100%;
+  max-width: 460px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--bg-cream);
+  border-radius: 28px 28px 0 0;
+  padding: 24px 20px calc(var(--safe-bottom) + 24px) 20px;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.15);
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.32, 1, 0.32, 1);
+}
+
+.modal-overlay.active .modal-sheet {
+  transform: translateY(0);
+}
+
+/* 模態框標頭 */
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.modal-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--brand-green);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-close-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-sub);
+}
+
+/* 達標慶祝彈窗 (Center Dialog) */
+.celebrate-dialog {
+  width: 90%;
+  max-width: 360px;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 30px 22px;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  transform: scale(0.85);
+  opacity: 0;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  margin: auto;
+}
+
+.modal-overlay.active .celebrate-dialog {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.celebrate-avatar {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--brand-green);
+  box-shadow: 0 8px 24px rgba(15, 110, 86, 0.2);
+  margin-bottom: 16px;
+  animation: bounceGently 2s ease-in-out infinite;
+}
+
+@keyframes bounceGently {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.celebrate-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--brand-green);
+  margin-bottom: 8px;
+}
+
+.celebrate-subtitle {
+  font-size: 16px;
+  color: var(--text-sub);
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.celebrate-stat-box {
+  background: var(--brand-green-light);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  margin-bottom: 24px;
+}
+
+.celebrate-stat-label {
+  font-size: 13px;
+  color: var(--brand-green);
+  font-weight: 600;
+}
+
+.celebrate-stat-val {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--brand-green);
+}
+
+/* ─────────────────────────────
+   首次引導設定精靈 (Onboarding)
+   ───────────────────────────── */
+.onboarding-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-cream);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: calc(var(--safe-top) + 20px) 24px calc(var(--safe-bottom) + 30px) 24px;
+}
+
+.onboarding-screen.hidden {
+  display: none !important;
+}
+
+.onboarding-step {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 420px;
+  width: 100%;
+  margin: auto;
+}
+
+.onboarding-step.active {
+  display: flex;
+  animation: fadeInStep 0.4s ease forwards;
+}
+
+@keyframes fadeInStep {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.onboarding-character-hero {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 5px solid var(--brand-green);
+  box-shadow: var(--shadow-lg);
+  margin-bottom: 24px;
+  animation: floatHero 3s ease-in-out infinite;
+}
+
+@keyframes floatHero {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.onboarding-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--brand-green);
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+.onboarding-desc {
+  font-size: 16.5px;
+  color: var(--text-sub);
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+/* 大按鈕設定 (全域主要行動按鈕) */
+.btn-primary-large {
+  width: 100%;
+  min-height: 58px;
+  background: var(--brand-green);
+  color: #FFFFFF;
+  border: none;
+  border-radius: var(--radius-full);
+  font-size: 19px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(15, 110, 86, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.2s ease;
+  margin-top: 16px;
+}
+
+.btn-primary-large:active {
+  transform: scale(0.97);
+  background: var(--brand-green-hover);
+}
+
+.btn-secondary-large {
+  width: 100%;
+  min-height: 52px;
+  background: var(--bg-card);
+  border: 1.5px solid var(--brand-green);
+  color: var(--brand-green);
+  border-radius: var(--radius-full);
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.btn-secondary-large:active {
+  background: var(--brand-green-light);
+}
+
+/* 大型數字輸入步進器 (體重、目標) */
+.number-stepper-box {
+  background: var(--bg-card);
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 24px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 24px;
+}
+
+.stepper-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--brand-green-light);
+  border: none;
+  color: var(--brand-green);
+  font-size: 28px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.stepper-btn:active {
+  background: var(--brand-green);
+  color: #FFF;
+  transform: scale(0.92);
+}
+
+.stepper-value-wrap {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+}
+
+.stepper-input {
+  font-size: 44px;
+  font-weight: 800;
+  color: var(--brand-green);
+  border: none;
+  background: transparent;
+  width: 140px;
+  text-align: center;
+  font-family: inherit;
+  outline: none;
+}
+
+.stepper-unit {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-sub);
+}
+
+/* 生活狀態三大選項卡片 */
+.lifestyle-options-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.lifestyle-card {
+  background: var(--bg-card);
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.lifestyle-card.selected {
+  border-color: var(--brand-green);
+  background: var(--brand-green-light);
+}
+
+.lifestyle-icon-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #FFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.lifestyle-card.selected .lifestyle-icon-circle {
+  background: var(--brand-green);
+  color: #FFF;
+}
+
+.lifestyle-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 2px;
+}
+
+.lifestyle-desc {
+  font-size: 13.5px;
+  color: var(--text-sub);
+}
+
+/* 計算結果建議卡片 */
+.calc-result-box {
+  background: #FCF9F2;
+  border: 1.5px solid var(--gold-accent);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  width: 100%;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.calc-result-title {
+  font-size: 15px;
+  color: var(--text-sub);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.calc-result-highlight {
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--brand-green);
+  margin-bottom: 12px;
+}
+
+.calc-disclaimer {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  border-top: 1px dashed rgba(201, 168, 106, 0.35);
+  padding-top: 10px;
+}
+
+/* 提醒設定卡片 */
+.reminder-setup-card {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 20px 18px;
+  width: 100%;
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.reminder-time-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(15, 110, 86, 0.08);
+}
+
+.reminder-time-row:last-child {
+  border-bottom: none;
+}
+
+.reminder-time-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.reminder-time-input {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--brand-green);
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  background: #FAFCFB;
+  font-family: inherit;
+  outline: none;
+}
+
+.toggle-switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0 6px 0;
+}
+
+/* 現代切換開關 (Toggle Switch) */
+.switch-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.switch-checkbox {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.switch-slider {
+  width: 52px;
+  height: 30px;
+  background: #D8E2DC;
+  border-radius: var(--radius-full);
+  position: relative;
+  transition: background 0.25s ease;
+}
+
+.switch-slider::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  background: #FFFFFF;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.switch-checkbox:checked + .switch-slider {
+  background: var(--brand-green);
+}
+
+.switch-checkbox:checked + .switch-slider::before {
+  transform: translateX(22px);
+}
+
+/* 設定頁清單區塊 */
+.settings-section-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.settings-section-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--sage-green);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+.settings-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(15, 110, 86, 0.06);
+}
+
+.settings-item-row:last-child {
+  border-bottom: none;
+}
+
+.settings-item-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.settings-item-desc {
+  font-size: 12.5px;
+  color: var(--text-sub);
+}
+
+/* 自訂容量彈窗數字鍵盤或按鈕 */
+.custom-quick-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.preset-chip-btn {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--brand-green);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.preset-chip-btn:active {
+  background: var(--brand-green);
+  color: #FFF;
+}
+
+/* =============================================
+   自訂喝水量全新優化：大輸入框與大螢幕九宮格鍵盤
+   ============================================= */
+.custom-input-display-card {
+  background: #FFFFFF;
+  border: 2.5px solid var(--brand-green);
+  border-radius: var(--radius-lg);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  box-shadow: 0 4px 16px rgba(15, 110, 86, 0.1);
+}
+
+.custom-input-wrap {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+  flex: 1;
+}
+
+.custom-big-input {
+  font-size: 42px;
+  font-weight: 800;
+  color: var(--brand-green);
+  border: none;
+  background: transparent;
+  width: 140px;
+  text-align: center;
+  font-family: inherit;
+  outline: none;
+  border-bottom: 2px dashed rgba(15, 110, 86, 0.35);
+  padding-bottom: 2px;
+}
+
+.custom-big-input:focus {
+  border-bottom: 2.5px solid var(--brand-green);
+  background: rgba(15, 110, 86, 0.03);
+}
+
+.custom-input-unit {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-sub);
+}
+
+/* 螢幕大數字九宮格鍵盤 */
+.numpad-container {
+  margin-top: 14px;
+  margin-bottom: 6px;
+}
+
+.numpad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.numpad-btn {
+  background: #FFFFFF;
+  border: 1.5px solid rgba(15, 110, 86, 0.16);
+  border-radius: var(--radius-md);
+  min-height: 52px;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--brand-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.numpad-btn:active {
+  background: var(--brand-green-light);
+  transform: scale(0.93);
+  border-color: var(--brand-green);
+}
+
+.numpad-btn.numpad-action {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-sub);
+  background: #F4F7F5;
+}
+
+.numpad-btn.numpad-action:active {
+  background: #E2ECE6;
+}
+</style>
 </head>
 <body>
 
@@ -28,7 +1449,7 @@
     <header class="app-header">
       <div class="header-brand">
         <button class="brand-avatar-btn" id="avatarInteractBtn" title="點擊跟小助理打招呼">
-          <img src="./icons/character.jpg" alt="Fit21 水滴小助理" class="brand-avatar">
+          <img src="./character.jpg" onerror="this.onerror=null; this.src='./icons/character.jpg';" alt="Fit21 水滴小助理" class="brand-avatar">
         </button>
         <div class="brand-info">
           <h1 class="brand-title">Fit21 水水小助理 💧</h1>
@@ -44,7 +1465,7 @@
 
     <!-- 智慧叮嚀卡片 (隨時間與進度自動切換，不打擾) -->
     <section class="smart-reminder-card" id="smartReminderCard">
-      <img src="./icons/character.jpg" alt="小助理叮嚀" class="reminder-avatar-small">
+      <img src="./character.jpg" onerror="this.onerror=null; this.src='./icons/character.jpg';" alt="小助理叮嚀" class="reminder-avatar-small">
       <div class="reminder-content">
         <div class="reminder-header-row">
           <span class="reminder-title" id="reminderCardTitle">早安 💧</span>
@@ -186,7 +1607,7 @@
        ───────────────────────────── -->
   <div class="modal-overlay" id="celebrationModal">
     <div class="celebrate-dialog">
-      <img src="./icons/character.jpg" alt="Fit21 小助理慶祝" class="celebrate-avatar">
+      <img src="./character.jpg" onerror="this.onerror=null; this.src='./icons/character.jpg';" alt="Fit21 小助理慶祝" class="celebrate-avatar">
       <h2 class="celebrate-title">今天完成了！💧</h2>
       <p class="celebrate-subtitle">謝謝你今天也有好好照顧自己。</p>
       
@@ -207,29 +1628,49 @@
   <div class="modal-overlay" id="customAmountModal">
     <div class="modal-sheet">
       <div class="modal-header">
-        <h3 class="modal-title">✏️ 輸入喝水量</h3>
+        <h3 class="modal-title">✏️ 自訂喝水量</h3>
         <button class="modal-close-btn" id="closeCustomModalBtn">✕</button>
       </div>
 
-      <div class="number-stepper-box">
-        <button class="stepper-btn" id="customMinusBtn">－</button>
-        <div class="stepper-value-wrap">
-          <input type="number" class="stepper-input" id="customInput" value="250" min="10" max="2000" step="50">
-          <span class="stepper-unit">mL</span>
+      <!-- 清楚的大型輸入卡片 (點擊直接反白打字或按九宮格) -->
+      <div class="custom-input-display-card">
+        <button class="stepper-btn" id="customMinusBtn" title="減少 50 mL">－</button>
+        <div class="custom-input-wrap">
+          <input type="text" inputmode="numeric" pattern="[0-9]*" class="custom-big-input" id="customInput" value="250" placeholder="0" onfocus="this.select()">
+          <span class="custom-input-unit">mL</span>
         </div>
-        <button class="stepper-btn" id="customPlusBtn">＋</button>
+        <button class="stepper-btn" id="customPlusBtn" title="增加 50 mL">＋</button>
       </div>
 
+      <!-- 常用容量快速點選 -->
       <div class="custom-quick-grid">
-        <button class="preset-chip-btn" data-preset="100">100 mL</button>
         <button class="preset-chip-btn" data-preset="150">150 mL</button>
         <button class="preset-chip-btn" data-preset="250">250 mL</button>
         <button class="preset-chip-btn" data-preset="350">350 mL</button>
-        <button class="preset-chip-btn" data-preset="400">400 mL</button>
-        <button class="preset-chip-btn" data-preset="600">600 mL</button>
+        <button class="preset-chip-btn" data-preset="450">450 mL</button>
+        <button class="preset-chip-btn" data-preset="500">500 mL</button>
+        <button class="preset-chip-btn" data-preset="700">700 mL</button>
       </div>
 
-      <button class="btn-primary-large" id="submitCustomAmountBtn">
+      <!-- 專為長輩與手機操作設計的螢幕大數字九宮格 -->
+      <div class="numpad-container">
+        <div class="numpad-grid">
+          <button class="numpad-btn" data-key="1">1</button>
+          <button class="numpad-btn" data-key="2">2</button>
+          <button class="numpad-btn" data-key="3">3</button>
+          <button class="numpad-btn" data-key="4">4</button>
+          <button class="numpad-btn" data-key="5">5</button>
+          <button class="numpad-btn" data-key="6">6</button>
+          <button class="numpad-btn" data-key="7">7</button>
+          <button class="numpad-btn" data-key="8">8</button>
+          <button class="numpad-btn" data-key="9">9</button>
+          <button class="numpad-btn numpad-action" data-key="clear">清除</button>
+          <button class="numpad-btn" data-key="0">0</button>
+          <button class="numpad-btn numpad-action" data-key="backspace">⌫</button>
+        </div>
+      </div>
+
+      <button class="btn-primary-large" id="submitCustomAmountBtn" style="margin-top:14px;">
         確認記錄這杯水 💧
       </button>
     </div>
@@ -363,7 +1804,7 @@
     
     <!-- 步驟 1: 歡迎介紹 -->
     <div class="onboarding-step active" id="onboardingStep1">
-      <img src="./icons/character.jpg" alt="Fit21 水滴小助理" class="onboarding-character-hero">
+      <img src="./character.jpg" onerror="this.onerror=null; this.src='./icons/character.jpg';" alt="Fit21 水滴小助理" class="onboarding-character-hero">
       <h2 class="onboarding-title">嗨！我是你的<br>Fit21 水水小助理 💧</h2>
       <p class="onboarding-desc">
         先讓我知道一點點你的生活狀況，<br>我會幫你設定一個適合開始的喝水目標。
@@ -498,7 +1939,1177 @@
 
   </section>
 
-  <!-- PWA Service Worker 註冊與核心邏輯模組 -->
-  <script src="./js/bundle.js"></script>
+  <script>
+/**
+ * Fit21 水水小助理 - 單檔自包含執行腳本 (支援 file:// 與本機直接執行)
+ */
+
+// 1. WATER_CONFIG & 計算邏輯
+const WATER_CONFIG = {
+  calculation: {
+    multipliers: {
+      daily: 33,
+      weight_mgmt: 36,
+      active: 40
+    },
+    roundTo: 100,
+    minLimit: 1200,
+    maxLimit: 3800,
+    defaultWeight: 60,
+    defaultGoal: 2000
+  },
+  defaultQuickButtons: [200, 300, 500],
+  reminders: {
+    firstTime: "11:30",
+    secondTime: "17:00",
+    enabled: true
+  },
+  encouragements: [
+    "收到 💧",
+    "又完成一杯！",
+    "慢慢喝，很棒。",
+    "咕嚕咕嚕，多了一杯好水 💧",
+    "休息一下，喝口水真好。",
+    "剛剛好的節奏，很舒服 🌿",
+    "今天也有好好照顧自己 ✨",
+    "水潤水潤，繼續保持 💧"
+  ],
+  knowledgeTips: [
+    "水分是維持身體正常新陳代謝與生理機能的重要元素。",
+    "少量、規律多次補充，比忙了一整天才一口氣灌水更容易吸收。",
+    "不要等到非常口渴才想起喝水，口渴時通常身體已經有些缺水了。",
+    "每天把水瓶放在視線看得見的地方，就是最自然的喝水提醒。",
+    "活動量增加或天氣悶熱流汗時，記得適度多補充水分。",
+    "早晨起床先喝一杯溫開水，能溫和喚醒腸胃與新陳代謝。",
+    "建立固定的喝水節奏，可以大大減少「忙到忘記喝水」的狀況。",
+    "喝水建議小口慢飲，讓水分更舒適地被身體吸收利用。",
+    "常溫水或溫開水對腸胃最溫和，喝起來也最無負擔。",
+    "餐前半小時適度喝點水，能潤滑消化道，讓用餐更舒緩。",
+    "下午感到疲累或注意力不集中時，先喝幾口水讓頭腦清醒一下。",
+    "長時間待在冷氣房或乾燥環境中，皮膚和呼吸道也需要水分滋潤。",
+    "喝水不求快，像小助理常說的：「慢慢喝，剛剛好就好。」",
+    "多喝水有助於維持良好的排便與新陳代謝節奏。",
+    "睡前一小時只需稍微抿幾口水潤喉即可，不需要大量喝水影響睡眠。",
+    "每次去洗手間後，順手倒半杯水補充，也是很棒的微習慣。",
+    "工作用電腦或看電視一段時間，站起來走走並喝兩口水休息一下。",
+    "湯品、蔬菜水果中也含有水分，都是日常水分來源的好夥伴。",
+    "若剛運動完滿頭大汗，記得分次慢慢補水，不要一口氣喝太急。",
+    "規律補充水分有助於維持思緒清晰與精神飽滿。",
+    "如果覺得白開水單調，偶爾加一片檸檬或薄荷葉提味也很舒爽。",
+    "生病或感冒不舒服時，多補充溫開水能幫助身體舒緩修復。",
+    "觀察小便顏色：淡淡的淺黃色通常代表體內水分充足喔！",
+    "搭乘長途車或飛機時空氣乾燥，別忘了隨身準備水壺隨時補充。",
+    "不需要和別人比較喝水量，找到適合自己體質與節奏的量最舒適。",
+    "洗完熱水澡後，毛孔張開流失水分，喝一杯溫水感覺格外舒暢。",
+    "養成帶著水壺出門的習慣，不知不覺就能少喝許多含糖飲料。",
+    "有心臟或腎臟特殊狀況的朋友，請務必遵循醫師吩咐的水分限制。",
+    "今天若沒喝到預期目標不用焦慮，身體每天感受不同，明天再早點開始就好。",
+    "每一口乾淨純粹的好水，都是今天對自己身體最溫柔的疼惜。"
+  ]
+};
+
+function calculateSuggestedWater(weight, lifestyle = 'daily') {
+  const cfg = WATER_CONFIG.calculation;
+  const numWeight = Number(weight) || cfg.defaultWeight;
+  const multiplier = cfg.multipliers[lifestyle] || cfg.multipliers.daily;
+  let raw = numWeight * multiplier;
+  let rounded = Math.round(raw / cfg.roundTo) * cfg.roundTo;
+  if (rounded < cfg.minLimit) rounded = cfg.minLimit;
+  if (rounded > cfg.maxLimit) rounded = cfg.maxLimit;
+  return rounded;
+}
+
+function getSmartReminderState(currentWater, targetWater, now = new Date(), reminderTimes = WATER_CONFIG.reminders) {
+  const goal = Math.max(1, targetWater || WATER_CONFIG.calculation.defaultGoal);
+  const ratio = (currentWater || 0) / goal;
+  const hours = now.getHours();
+  const minutes = now.getMinutes();
+  const currentTimeVal = hours * 60 + minutes;
+
+  const parseTime = (timeStr) => {
+    if (!timeStr) return 0;
+    const [h, m] = timeStr.split(':').map(Number);
+    return (h || 0) * 60 + (m || 0);
+  };
+
+  const t1 = parseTime(reminderTimes.firstTime || "11:30");
+  const t2 = parseTime(reminderTimes.secondTime || "17:00");
+  const nightTime = 20 * 60;
+
+  if (ratio >= 1.0) {
+    return {
+      type: 'completed',
+      title: '今天的喝水目標完成了 🎉',
+      message: '今天的喝水目標完成了 🎉 很棒，今天不再打擾你。',
+      shouldNotify: false,
+      canDisturb: false
+    };
+  }
+
+  if (currentTimeVal >= nightTime) {
+    return {
+      type: 'night_rest',
+      title: '今晚好好休息 💧',
+      message: '今天沒有完成也沒關係，不需要為了達標一次喝大量的水。明天我們早一點開始 💧',
+      shouldNotify: false,
+      canDisturb: false
+    };
+  }
+
+  if (currentTimeVal >= t2) {
+    if (ratio < 0.6) {
+      return {
+        type: 'second_low',
+        title: '傍晚溫柔提醒 💧',
+        message: '今天還有一些水量沒有完成，不用急，晚餐前慢慢補一杯就好 💧',
+        shouldNotify: true,
+        canDisturb: true
+      };
+    } else {
+      return {
+        type: 'second_near',
+        title: '接近目標囉 💧',
+        message: '今天已經快完成囉 💧 按照自己的節奏慢慢喝就好。',
+        shouldNotify: true,
+        canDisturb: true
+      };
+    }
+  }
+
+  if (currentTimeVal >= t1) {
+    if (ratio < 0.25) {
+      return {
+        type: 'first_low',
+        title: '上午喝水提醒 💧',
+        message: '💧 上午忙到忘記喝水了嗎？有空時補一杯就好。',
+        shouldNotify: true,
+        canDisturb: true
+      };
+    } else if (ratio < 0.5) {
+      return {
+        type: 'first_normal',
+        title: '喝水節奏不錯 💧',
+        message: '今天喝水的節奏不錯 💧 繼續保持就好。',
+        shouldNotify: true,
+        canDisturb: false
+      };
+    } else {
+      return {
+        type: 'first_good',
+        title: '節奏很棒 👍',
+        message: '今天喝得很有節奏 👍',
+        shouldNotify: false,
+        canDisturb: false
+      };
+    }
+  }
+
+  return {
+    type: 'morning',
+    title: '早安 💧',
+    message: '早安！早晨先來一杯溫開水，開啟舒暢的一天。',
+    shouldNotify: false,
+    canDisturb: false
+  };
+}
+
+// 2. 本地存儲
+const STORAGE_KEYS = {
+  SETTINGS: 'fit21_settings_v1',
+  LOGS: 'fit21_daily_logs_v1',
+  REMINDER_STATUS: 'fit21_reminder_sent_v1'
+};
+
+const DEFAULT_SETTINGS = {
+  onboarded: false,
+  weight: 60,
+  lifestyle: 'daily',
+  goal: 2000,
+  reminders: { firstTime: "11:30", secondTime: "17:00", enabled: true },
+  soundEnabled: true,
+  vibrationEnabled: true,
+  quickButtons: [200, 300, 500]
+};
+
+function getLocalDateString(d = new Date()) {
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function getSettings() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.SETTINGS);
+    if (!raw) return { ...DEFAULT_SETTINGS };
+    return { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
+  } catch (e) {
+    return { ...DEFAULT_SETTINGS };
+  }
+}
+
+function saveSettings(newSettings) {
+  try {
+    const current = getSettings();
+    const updated = { ...current, ...newSettings };
+    localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(updated));
+    return updated;
+  } catch (e) {
+    return newSettings;
+  }
+}
+
+function getAllLogs() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.LOGS);
+    return raw ? JSON.parse(raw) : {};
+  } catch (e) {
+    return {};
+  }
+}
+
+function getTodayData() {
+  const todayKey = getLocalDateString();
+  const allLogs = getAllLogs();
+  const todayRecord = allLogs[todayKey] || {
+    date: todayKey,
+    logs: [],
+    goal: getSettings().goal
+  };
+  const total = (todayRecord.logs || []).reduce((sum, item) => sum + (Number(item.amount) || 0), 0);
+  return {
+    date: todayKey,
+    goal: todayRecord.goal || getSettings().goal,
+    logs: todayRecord.logs || [],
+    total
+  };
+}
+
+function addWaterLog(amount) {
+  const todayKey = getLocalDateString();
+  const allLogs = getAllLogs();
+  const settings = getSettings();
+
+  if (!allLogs[todayKey]) {
+    allLogs[todayKey] = {
+      date: todayKey,
+      goal: settings.goal,
+      logs: []
+    };
+  }
+
+  const prevTotal = (allLogs[todayKey].logs || []).reduce((sum, item) => sum + (Number(item.amount) || 0), 0);
+  const newLog = {
+    id: 'log_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+    amount: Number(amount),
+    timestamp: Date.now()
+  };
+
+  allLogs[todayKey].logs.push(newLog);
+  allLogs[todayKey].goal = settings.goal;
+
+  try {
+    localStorage.setItem(STORAGE_KEYS.LOGS, JSON.stringify(allLogs));
+  } catch (e) {}
+
+  const currentTotal = prevTotal + Number(amount);
+  const isGoalReachedNow = prevTotal < settings.goal && currentTotal >= settings.goal;
+
+  return { record: newLog, total: currentTotal, isGoalReachedNow };
+}
+
+function undoLastWaterLog() {
+  const todayKey = getLocalDateString();
+  const allLogs = getAllLogs();
+
+  if (!allLogs[todayKey] || !allLogs[todayKey].logs || allLogs[todayKey].logs.length === 0) {
+    return { undoneRecord: null, newTotal: 0 };
+  }
+
+  const undoneRecord = allLogs[todayKey].logs.pop();
+  try {
+    localStorage.setItem(STORAGE_KEYS.LOGS, JSON.stringify(allLogs));
+  } catch (e) {}
+
+  const newTotal = (allLogs[todayKey].logs || []).reduce((sum, item) => sum + (Number(item.amount) || 0), 0);
+  return { undoneRecord, newTotal };
+}
+
+function getRecent7DaysHistory() {
+  const allLogs = getAllLogs();
+  const currentSettings = getSettings();
+  const weekDayNames = ['日', '一', '二', '三', '四', '五', '六'];
+  const results = [];
+  const now = new Date();
+
+  for (let i = 6; i >= 0; i--) {
+    const targetDate = new Date(now);
+    targetDate.setDate(now.getDate() - i);
+    const dateKey = getLocalDateString(targetDate);
+    const dayOfWeek = weekDayNames[targetDate.getDay()];
+    const isToday = i === 0;
+
+    const record = allLogs[dateKey];
+    let total = 0;
+    let goal = currentSettings.goal;
+
+    if (record) {
+      goal = record.goal || currentSettings.goal;
+      total = (record.logs || []).reduce((sum, item) => sum + (Number(item.amount) || 0), 0);
+    }
+
+    const completed = goal > 0 && total >= goal;
+
+    results.push({
+      dateKey,
+      dayNumber: targetDate.getDate(),
+      dayOfWeek,
+      total,
+      goal,
+      completed,
+      isToday,
+      percentage: goal > 0 ? Math.min(100, Math.round((total / goal) * 100)) : 0
+    });
+  }
+
+  return results;
+}
+
+function getReminderSentStatus() {
+  const todayKey = getLocalDateString();
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.REMINDER_STATUS);
+    if (!raw) return { date: todayKey, firstSent: false, secondSent: false };
+    const parsed = JSON.parse(raw);
+    if (parsed.date !== todayKey) {
+      return { date: todayKey, firstSent: false, secondSent: false };
+    }
+    return parsed;
+  } catch (e) {
+    return { date: todayKey, firstSent: false, secondSent: false };
+  }
+}
+
+function markReminderSent(reminderType) {
+  const status = getReminderSentStatus();
+  if (reminderType === 'first') status.firstSent = true;
+  if (reminderType === 'second') status.secondSent = true;
+  localStorage.setItem(STORAGE_KEYS.REMINDER_STATUS, JSON.stringify(status));
+}
+
+// 3. Web Audio 音效與觸覺
+let audioCtx = null;
+function getAudioContext() {
+  if (!audioCtx) {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (AudioContextClass) audioCtx = new AudioContextClass();
+  }
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+
+function playWaterDropSound(soundEnabled = true) {
+  if (!soundEnabled) return;
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(600, now);
+    osc.frequency.exponentialRampToValueAtTime(1450, now + 0.08);
+    osc.frequency.exponentialRampToValueAtTime(750, now + 0.18);
+
+    gain.gain.setValueAtTime(0.001, now);
+    gain.gain.linearRampToValueAtTime(0.25, now + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.23);
+  } catch (err) {}
+}
+
+function playSuccessChime(soundEnabled = true) {
+  if (!soundEnabled) return;
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const notes = [523.25, 659.25, 783.99, 1046.50];
+    const startTime = ctx.currentTime;
+
+    notes.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      const noteStart = startTime + idx * 0.12;
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, noteStart);
+
+      gain.gain.setValueAtTime(0.001, noteStart);
+      gain.gain.linearRampToValueAtTime(0.18, noteStart + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.0001, noteStart + 0.65);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(noteStart);
+      osc.stop(noteStart + 0.7);
+    });
+  } catch (err) {}
+}
+
+function triggerHaptic(vibrationEnabled = true, type = 'light') {
+  if (!vibrationEnabled) return;
+  if ('vibrate' in navigator) {
+    try {
+      if (type === 'light') navigator.vibrate(15);
+      else if (type === 'success') navigator.vibrate([20, 50, 30]);
+    } catch (e) {}
+  }
+}
+
+// 4. 通知模組
+function isNotificationSupported() {
+  return 'Notification' in window;
+}
+
+async function requestNotificationPermission() {
+  if (!isNotificationSupported()) return false;
+  try {
+    const permission = await Notification.requestPermission();
+    return permission === 'granted';
+  } catch (err) {
+    return false;
+  }
+}
+
+function sendLocalNotification(title, body, tag = 'fit21-water') {
+  if (!isNotificationSupported() || Notification.permission !== 'granted') return false;
+  try {
+    const options = {
+      body,
+      icon: './icons/icon-192.png',
+      badge: './icons/icon-192.png',
+      tag,
+      renotify: false
+    };
+    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.ready.then(reg => {
+        reg.showNotification(title, options);
+      }).catch(() => {
+        new Notification(title, options);
+      });
+    } else {
+      new Notification(title, options);
+    }
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function checkAndTriggerReminders() {
+  const settings = getSettings();
+  if (!settings.reminders || !settings.reminders.enabled) return;
+  if (!isNotificationSupported() || Notification.permission !== 'granted') return;
+
+  const today = getTodayData();
+  const sentStatus = getReminderSentStatus();
+  const now = new Date();
+  const currentHM = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+  const firstTime = settings.reminders.firstTime || "11:30";
+  const secondTime = settings.reminders.secondTime || "17:00";
+  const reminderState = getSmartReminderState(today.total, today.goal, now, settings.reminders);
+
+  if (today.total >= today.goal) return;
+
+  if (currentHM === firstTime && !sentStatus.firstSent) {
+    if (reminderState.canDisturb) {
+      sendLocalNotification("💧 Fit21 水水小助理", reminderState.message, 'fit21-first');
+    }
+    markReminderSent('first');
+  }
+
+  if (currentHM === secondTime && !sentStatus.secondSent) {
+    if (reminderState.canDisturb) {
+      sendLocalNotification("💧 Fit21 水水小助理", reminderState.message, 'fit21-second');
+    }
+    markReminderSent('second');
+  }
+}
+
+function sendTestNotification() {
+  const settings = getSettings();
+  const today = getTodayData();
+  const reminderState = getSmartReminderState(today.total, today.goal, new Date(), settings.reminders);
+
+  return sendLocalNotification(
+    "💧 Fit21 水水小助理（測試提醒）",
+    reminderState.message || "這是一則溫柔提醒測試！喝水小助理在此陪你 💧",
+    'fit21-test'
+  );
+}
+
+// 5. 主應用程式 UI 邏輯
+(function() {
+  let toastTimer = null;
+  let currentTipIndex = Math.floor(Math.random() * WATER_CONFIG.knowledgeTips.length);
+  let deferredPrompt = null;
+  let tempOnboardData = {
+    weight: 60,
+    lifestyle: 'daily',
+    goal: 2000,
+    reminders: { firstTime: "11:30", secondTime: "17:00", enabled: true }
+  };
+
+  let DOM = {};
+
+  function initApp() {
+    DOM = {
+      appContainer: document.getElementById('app-container'),
+      avatarInteractBtn: document.getElementById('avatarInteractBtn'),
+      openSettingsBtn: document.getElementById('openSettingsBtn'),
+      smartReminderCard: document.getElementById('smartReminderCard'),
+      reminderCardTitle: document.getElementById('reminderCardTitle'),
+      reminderCardBadge: document.getElementById('reminderCardBadge'),
+      reminderCardText: document.getElementById('reminderCardText'),
+      glassContainer: document.getElementById('glassContainer'),
+      waterFill: document.getElementById('waterFill'),
+      glassPercent: document.getElementById('glassPercent'),
+      currentAmountDisplay: document.getElementById('currentAmountDisplay'),
+      targetAmountDisplay: document.getElementById('targetAmountDisplay'),
+      statusPercentBadge: document.getElementById('statusPercentBadge'),
+      undoBtn: document.getElementById('undoBtn'),
+      undoBtnText: document.getElementById('undoBtnText'),
+      quickBtns: [
+        document.getElementById('quickBtn0'),
+        document.getElementById('quickBtn1'),
+        document.getElementById('quickBtn2')
+      ],
+      quickAmounts: [
+        document.getElementById('quickAmount0'),
+        document.getElementById('quickAmount1'),
+        document.getElementById('quickAmount2')
+      ],
+      openCustomModalBtn: document.getElementById('openCustomModalBtn'),
+      historyDropsRow: document.getElementById('historyDropsRow'),
+      refreshKnowledgeBtn: document.getElementById('refreshKnowledgeBtn'),
+      knowledgeTipText: document.getElementById('knowledgeTipText'),
+      toastBubble: document.getElementById('toastBubble'),
+      toastIcon: document.getElementById('toastIcon'),
+      toastMessage: document.getElementById('toastMessage'),
+      celebrationModal: document.getElementById('celebrationModal'),
+      celebrateStatVal: document.getElementById('celebrateStatVal'),
+      closeCelebrationBtn: document.getElementById('closeCelebrationBtn'),
+      customAmountModal: document.getElementById('customAmountModal'),
+      closeCustomModalBtn: document.getElementById('closeCustomModalBtn'),
+      customMinusBtn: document.getElementById('customMinusBtn'),
+      customPlusBtn: document.getElementById('customPlusBtn'),
+      customInput: document.getElementById('customInput'),
+      submitCustomAmountBtn: document.getElementById('submitCustomAmountBtn'),
+      settingsModal: document.getElementById('settingsModal'),
+      closeSettingsModalBtn: document.getElementById('closeSettingsModalBtn'),
+      settingGoalMinus: document.getElementById('settingGoalMinus'),
+      settingGoalPlus: document.getElementById('settingGoalPlus'),
+      settingGoalVal: document.getElementById('settingGoalVal'),
+      settingWeightMinus: document.getElementById('settingWeightMinus'),
+      settingWeightPlus: document.getElementById('settingWeightPlus'),
+      settingWeightVal: document.getElementById('settingWeightVal'),
+      settingLifestyleSelect: document.getElementById('settingLifestyleSelect'),
+      settingReminderToggle: document.getElementById('settingReminderToggle'),
+      settingTime1: document.getElementById('settingTime1'),
+      settingTime2: document.getElementById('settingTime2'),
+      testNotificationBtn: document.getElementById('testNotificationBtn'),
+      settingSoundToggle: document.getElementById('settingSoundToggle'),
+      settingVibrationToggle: document.getElementById('settingVibrationToggle'),
+      saveAndCloseSettingsBtn: document.getElementById('saveAndCloseSettingsBtn'),
+      restartOnboardingBtn: document.getElementById('restartOnboardingBtn'),
+      onboardingScreen: document.getElementById('onboardingScreen'),
+      onboardingSteps: [
+        document.getElementById('onboardingStep1'),
+        document.getElementById('onboardingStep2'),
+        document.getElementById('onboardingStep3'),
+        document.getElementById('onboardingStep4'),
+        document.getElementById('onboardingStep5')
+      ],
+      onboardNext1: document.getElementById('onboardNext1'),
+      obWeightMinus: document.getElementById('obWeightMinus'),
+      obWeightPlus: document.getElementById('obWeightPlus'),
+      obWeightInput: document.getElementById('obWeightInput'),
+      onboardNext2: document.getElementById('onboardNext2'),
+      lifestyleCards: document.querySelectorAll('.lifestyle-card'),
+      obSuggestedDisplay: document.getElementById('obSuggestedDisplay'),
+      onboardNext3: document.getElementById('onboardNext3'),
+      obGoalMinus: document.getElementById('obGoalMinus'),
+      obGoalPlus: document.getElementById('obGoalPlus'),
+      obGoalInput: document.getElementById('obGoalInput'),
+      onboardNext4: document.getElementById('onboardNext4'),
+      obTime1: document.getElementById('obTime1'),
+      obTime2: document.getElementById('obTime2'),
+      obReminderToggle: document.getElementById('obReminderToggle'),
+      onboardFinishBtn: document.getElementById('onboardFinishBtn'),
+      pwaBanner: document.getElementById('pwaBanner'),
+      pwaBannerDesc: document.getElementById('pwaBannerDesc'),
+      pwaInstallBtn: document.getElementById('pwaInstallBtn')
+    };
+
+    const settings = getSettings();
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+    }
+
+    if (!settings.onboarded) {
+      startOnboarding();
+    } else {
+      DOM.onboardingScreen.classList.add('hidden');
+      renderHomePage();
+    }
+
+    bindEvents();
+    displayKnowledgeTip();
+
+    setInterval(() => {
+      checkAndTriggerReminders();
+      updateSmartReminderUI();
+    }, 30000);
+
+    initPwaInstall();
+  }
+
+  function renderHomePage() {
+    const settings = getSettings();
+    const today = getTodayData();
+    const goal = today.goal || settings.goal || 2000;
+    const total = today.total || 0;
+    const ratio = Math.min(1.2, total / goal);
+    const percentage = Math.round((total / goal) * 100);
+
+    const fillHeight = Math.min(100, Math.round(ratio * 100));
+    DOM.waterFill.style.height = `${fillHeight}%`;
+
+    DOM.glassPercent.textContent = `${percentage}%`;
+    DOM.currentAmountDisplay.textContent = total.toLocaleString();
+    DOM.targetAmountDisplay.textContent = goal.toLocaleString();
+
+    if (total >= goal) {
+      DOM.statusPercentBadge.textContent = `🎉 今日已達標 (${percentage}%)`;
+      DOM.statusPercentBadge.style.background = "#E4F1EC";
+      DOM.statusPercentBadge.style.color = "#0F6E56";
+    } else {
+      DOM.statusPercentBadge.textContent = `今天已經完成 ${percentage}%`;
+      DOM.statusPercentBadge.style.background = "#EBF5FB";
+      DOM.statusPercentBadge.style.color = "#2F88C0";
+    }
+
+    const quicks = settings.quickButtons || WATER_CONFIG.defaultQuickButtons;
+    DOM.quickAmounts.forEach((el, idx) => {
+      if (quicks[idx] !== undefined) {
+        el.textContent = `＋${quicks[idx]}`;
+      }
+    });
+
+    if (today.logs && today.logs.length > 0) {
+      DOM.undoBtn.disabled = false;
+      const lastAmount = today.logs[today.logs.length - 1].amount;
+      DOM.undoBtnText.textContent = `復原上一筆 (+${lastAmount} mL)`;
+    } else {
+      DOM.undoBtn.disabled = true;
+      DOM.undoBtnText.textContent = `復原上一筆`;
+    }
+
+    updateSmartReminderUI();
+    renderHistoryDrops();
+  }
+
+  function updateSmartReminderUI() {
+    const settings = getSettings();
+    const today = getTodayData();
+    const state = getSmartReminderState(today.total, today.goal, new Date(), settings.reminders);
+
+    DOM.reminderCardTitle.textContent = state.title;
+    DOM.reminderCardText.textContent = state.message;
+
+    DOM.smartReminderCard.classList.remove('completed', 'night-rest');
+    if (state.type === 'completed') {
+      DOM.smartReminderCard.classList.add('completed');
+      DOM.reminderCardBadge.textContent = '今日達標';
+    } else if (state.type === 'night-rest') {
+      DOM.smartReminderCard.classList.add('night-rest');
+      DOM.reminderCardBadge.textContent = '晚間休息';
+    } else {
+      DOM.reminderCardBadge.textContent = '溫柔陪伴';
+    }
+  }
+
+  function handleLogWater(amount) {
+    const settings = getSettings();
+    const { total, isGoalReachedNow } = addWaterLog(amount);
+
+    playWaterDropSound(settings.soundEnabled);
+    triggerHaptic(settings.vibrationEnabled, 'light');
+
+    DOM.glassContainer.style.transform = 'scale(0.96)';
+    setTimeout(() => {
+      DOM.glassContainer.style.transform = 'scale(1)';
+    }, 150);
+
+    const randomMsg = WATER_CONFIG.encouragements[Math.floor(Math.random() * WATER_CONFIG.encouragements.length)];
+    showToast(randomMsg);
+    renderHomePage();
+
+    if (isGoalReachedNow) {
+      setTimeout(() => {
+        triggerCelebration(total, settings.goal);
+      }, 400);
+    }
+  }
+
+  function triggerCelebration(total, goal) {
+    const settings = getSettings();
+    playSuccessChime(settings.soundEnabled);
+    triggerHaptic(settings.vibrationEnabled, 'success');
+
+    DOM.celebrateStatVal.textContent = `${total.toLocaleString()} / ${goal.toLocaleString()} mL`;
+    DOM.celebrationModal.classList.add('active');
+  }
+
+  function renderHistoryDrops() {
+    const history = getRecent7DaysHistory();
+    DOM.historyDropsRow.innerHTML = '';
+
+    history.forEach(day => {
+      const item = document.createElement('div');
+      item.className = `history-day-item ${day.isToday ? 'today' : ''}`;
+      
+      const dropSvg = `
+        <svg class="drop-svg ${day.completed ? 'completed' : 'incomplete'}" viewBox="0 0 32 40">
+          <path d="M16 2 C16 2 4 18 4 26 C4 33 9.5 38 16 38 C22.5 38 28 33 28 26 C28 18 16 2 16 2 Z"/>
+        </svg>
+      `;
+
+      item.innerHTML = `
+        <span class="day-label">${day.dayOfWeek}</span>
+        <div class="drop-icon-wrapper" title="${day.dateKey}：${day.total} / ${day.goal} mL">
+          ${dropSvg}
+          <span class="drop-percent-badge">${day.isToday ? '今天' : `${day.percentage}%`}</span>
+        </div>
+      `;
+
+      item.addEventListener('click', () => {
+        showToast(`${day.dayOfWeek}（${day.dayNumber}日）：喝了 ${day.total} mL ${day.completed ? '💧 達標！' : ''}`);
+      });
+
+      DOM.historyDropsRow.appendChild(item);
+    });
+  }
+
+  function displayKnowledgeTip(increment = 0) {
+    if (increment !== 0) {
+      currentTipIndex = (currentTipIndex + increment + WATER_CONFIG.knowledgeTips.length) % WATER_CONFIG.knowledgeTips.length;
+    }
+    const tip = WATER_CONFIG.knowledgeTips[currentTipIndex];
+    DOM.knowledgeTipText.style.opacity = '0';
+    setTimeout(() => {
+      DOM.knowledgeTipText.textContent = tip;
+      DOM.knowledgeTipText.style.opacity = '1';
+    }, 150);
+  }
+
+  function showToast(message, icon = '💧') {
+    if (toastTimer) clearTimeout(toastTimer);
+    DOM.toastIcon.textContent = icon;
+    DOM.toastMessage.textContent = message;
+    DOM.toastBubble.classList.add('show');
+    toastTimer = setTimeout(() => {
+      DOM.toastBubble.classList.remove('show');
+    }, 2200);
+  }
+
+  function startOnboarding() {
+    DOM.onboardingScreen.classList.remove('hidden');
+    showOnboardingStep(0);
+    tempOnboardData = {
+      weight: 60,
+      lifestyle: 'daily',
+      goal: 2000,
+      reminders: { firstTime: "11:30", secondTime: "17:00", enabled: true }
+    };
+    DOM.obWeightInput.value = tempOnboardData.weight;
+    updateOnboardingCalculation();
+  }
+
+  function showOnboardingStep(stepIndex) {
+    DOM.onboardingSteps.forEach((step, idx) => {
+      if (idx === stepIndex) step.classList.add('active');
+      else step.classList.remove('active');
+    });
+  }
+
+  function updateOnboardingCalculation() {
+    const suggested = calculateSuggestedWater(tempOnboardData.weight, tempOnboardData.lifestyle);
+    DOM.obSuggestedDisplay.textContent = `${suggested.toLocaleString()} mL`;
+    tempOnboardData.goal = suggested;
+    DOM.obGoalInput.value = suggested;
+  }
+
+  function bindEvents() {
+    DOM.avatarInteractBtn.addEventListener('click', () => {
+      playWaterDropSound(getSettings().soundEnabled);
+      const greetingList = [
+        "嗨！我是你的 Fit21 水水小助理 💧",
+        "今天也記得對自己溫柔一點，慢慢喝口水。",
+        "有我陪著你，喝水變成每天最舒心的小事 🌿",
+        "今天過得還順心嗎？先喝口水潤潤喉吧 ✨"
+      ];
+      const greeting = greetingList[Math.floor(Math.random() * greetingList.length)];
+      showToast(greeting);
+    });
+
+    DOM.glassContainer.addEventListener('click', () => {
+      playWaterDropSound(getSettings().soundEnabled);
+      showToast("咕嚕咕嚕，多喝好水真舒服 💧");
+    });
+
+    DOM.quickBtns.forEach((btn, index) => {
+      btn.addEventListener('click', () => {
+        const currentSettings = getSettings();
+        const quicks = currentSettings.quickButtons || WATER_CONFIG.defaultQuickButtons;
+        const amount = quicks[index] || 200;
+        handleLogWater(amount);
+      });
+    });
+
+    DOM.undoBtn.addEventListener('click', () => {
+      const { undoneRecord } = undoLastWaterLog();
+      if (undoneRecord) {
+        triggerHaptic(getSettings().vibrationEnabled, 'light');
+        showToast(`已復原上一筆記錄 (-${undoneRecord.amount} mL)`);
+        renderHomePage();
+      }
+    });
+
+    DOM.openCustomModalBtn.addEventListener('click', () => {
+      DOM.customAmountModal.classList.add('active');
+      setTimeout(() => {
+        if (DOM.customInput) {
+          DOM.customInput.focus();
+          DOM.customInput.select();
+        }
+      }, 100);
+    });
+
+    DOM.closeCustomModalBtn.addEventListener('click', () => {
+      DOM.customAmountModal.classList.remove('active');
+    });
+
+    DOM.customMinusBtn.addEventListener('click', () => {
+      let val = parseInt(DOM.customInput.value, 10) || 250;
+      val = Math.max(50, val - 50);
+      DOM.customInput.value = val;
+      triggerHaptic(getSettings().vibrationEnabled, 'light');
+    });
+
+    DOM.customPlusBtn.addEventListener('click', () => {
+      let val = parseInt(DOM.customInput.value, 10) || 250;
+      val = Math.min(3000, val + 50);
+      DOM.customInput.value = val;
+      triggerHaptic(getSettings().vibrationEnabled, 'light');
+    });
+
+    document.querySelectorAll('.preset-chip-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const preset = btn.getAttribute('data-preset');
+        DOM.customInput.value = preset;
+        triggerHaptic(getSettings().vibrationEnabled, 'light');
+      });
+    });
+
+    // 螢幕九宮格大數字鍵盤事件
+    document.querySelectorAll('.numpad-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const key = btn.getAttribute('data-key');
+        let current = DOM.customInput.value.trim();
+
+        if (key === 'clear') {
+          DOM.customInput.value = '';
+        } else if (key === 'backspace') {
+          DOM.customInput.value = current.slice(0, -1);
+        } else {
+          // 數字鍵 0~9
+          if (current === '0' || current === '') {
+            current = '';
+          }
+          if (current.length < 5) {
+            DOM.customInput.value = current + key;
+          }
+        }
+        triggerHaptic(getSettings().vibrationEnabled, 'light');
+      });
+    });
+
+    DOM.submitCustomAmountBtn.addEventListener('click', () => {
+      const amount = parseInt(DOM.customInput.value, 10);
+      if (isNaN(amount) || amount <= 0) {
+        showToast("請輸入喝水量 (例如 250) 💧");
+        return;
+      }
+      handleLogWater(amount);
+      DOM.customAmountModal.classList.remove('active');
+    });
+
+    DOM.closeCelebrationBtn.addEventListener('click', () => {
+      DOM.celebrationModal.classList.remove('active');
+    });
+
+    DOM.refreshKnowledgeBtn.addEventListener('click', () => {
+      displayKnowledgeTip(1);
+    });
+
+    DOM.openSettingsBtn.addEventListener('click', openSettingsSheet);
+
+    DOM.closeSettingsModalBtn.addEventListener('click', () => {
+      DOM.settingsModal.classList.remove('active');
+    });
+
+    DOM.settingGoalMinus.addEventListener('click', () => {
+      const s = getSettings();
+      const newGoal = Math.max(500, (s.goal || 2000) - 100);
+      saveSettings({ goal: newGoal });
+      DOM.settingGoalVal.textContent = `${newGoal} mL`;
+      renderHomePage();
+    });
+
+    DOM.settingGoalPlus.addEventListener('click', () => {
+      const s = getSettings();
+      const newGoal = Math.min(5000, (s.goal || 2000) + 100);
+      saveSettings({ goal: newGoal });
+      DOM.settingGoalVal.textContent = `${newGoal} mL`;
+      renderHomePage();
+    });
+
+    DOM.settingWeightMinus.addEventListener('click', () => {
+      const s = getSettings();
+      const newWeight = Math.max(30, (s.weight || 60) - 1);
+      saveSettings({ weight: newWeight });
+      DOM.settingWeightVal.textContent = `${newWeight} kg`;
+    });
+
+    DOM.settingWeightPlus.addEventListener('click', () => {
+      const s = getSettings();
+      const newWeight = Math.min(200, (s.weight || 60) + 1);
+      saveSettings({ weight: newWeight });
+      DOM.settingWeightVal.textContent = `${newWeight} kg`;
+    });
+
+    DOM.settingLifestyleSelect.addEventListener('change', (e) => {
+      saveSettings({ lifestyle: e.target.value });
+    });
+
+    DOM.settingReminderToggle.addEventListener('change', async (e) => {
+      const enabled = e.target.checked;
+      if (enabled && isNotificationSupported()) {
+        const granted = await requestNotificationPermission();
+        if (!granted) {
+          showToast("已開啟 App 內提醒 (瀏覽器推播未授權)");
+        } else {
+          showToast("已成功開啟每日兩次溫柔提醒 💧");
+        }
+      }
+      const current = getSettings();
+      saveSettings({
+        reminders: { ...current.reminders, enabled }
+      });
+      updateSmartReminderUI();
+    });
+
+    DOM.testNotificationBtn.addEventListener('click', async () => {
+      if (isNotificationSupported()) {
+        await requestNotificationPermission();
+      }
+      const sent = sendTestNotification();
+      if (sent) {
+        showToast("測試提醒已發送！請查看手機通知 🔔");
+      } else {
+        showToast("若未收到，請在瀏覽器設定中允許通知 💧");
+      }
+    });
+
+    DOM.settingSoundToggle.addEventListener('change', (e) => {
+      saveSettings({ soundEnabled: e.target.checked });
+      if (e.target.checked) playWaterDropSound(true);
+    });
+
+    DOM.settingVibrationToggle.addEventListener('change', (e) => {
+      saveSettings({ vibrationEnabled: e.target.checked });
+      if (e.target.checked) triggerHaptic(true, 'light');
+    });
+
+    DOM.saveAndCloseSettingsBtn.addEventListener('click', () => {
+      const updated = {
+        reminders: {
+          enabled: DOM.settingReminderToggle.checked,
+          firstTime: DOM.settingTime1.value || "11:30",
+          secondTime: DOM.settingTime2.value || "17:00"
+        }
+      };
+      saveSettings(updated);
+      DOM.settingsModal.classList.remove('active');
+      renderHomePage();
+      showToast("設定已儲存 💧");
+    });
+
+    DOM.restartOnboardingBtn.addEventListener('click', () => {
+      DOM.settingsModal.classList.remove('active');
+      startOnboarding();
+    });
+
+    DOM.onboardNext1.addEventListener('click', () => {
+      showOnboardingStep(1);
+    });
+
+    DOM.obWeightMinus.addEventListener('click', () => {
+      let w = Number(DOM.obWeightInput.value) || 60;
+      w = Math.max(30, w - 1);
+      DOM.obWeightInput.value = w;
+      tempOnboardData.weight = w;
+      updateOnboardingCalculation();
+    });
+
+    DOM.obWeightPlus.addEventListener('click', () => {
+      let w = Number(DOM.obWeightInput.value) || 60;
+      w = Math.min(200, w + 1);
+      DOM.obWeightInput.value = w;
+      tempOnboardData.weight = w;
+      updateOnboardingCalculation();
+    });
+
+    DOM.obWeightInput.addEventListener('input', () => {
+      const w = Number(DOM.obWeightInput.value) || 60;
+      tempOnboardData.weight = w;
+      updateOnboardingCalculation();
+    });
+
+    DOM.onboardNext2.addEventListener('click', () => {
+      showOnboardingStep(2);
+    });
+
+    DOM.lifestyleCards.forEach(card => {
+      card.addEventListener('click', () => {
+        DOM.lifestyleCards.forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        tempOnboardData.lifestyle = card.getAttribute('data-lifestyle');
+        updateOnboardingCalculation();
+      });
+    });
+
+    DOM.onboardNext3.addEventListener('click', () => {
+      showOnboardingStep(3);
+    });
+
+    DOM.obGoalMinus.addEventListener('click', () => {
+      let g = Number(DOM.obGoalInput.value) || 2000;
+      g = Math.max(500, g - 100);
+      DOM.obGoalInput.value = g;
+      tempOnboardData.goal = g;
+    });
+
+    DOM.obGoalPlus.addEventListener('click', () => {
+      let g = Number(DOM.obGoalInput.value) || 2000;
+      g = Math.min(5000, g + 100);
+      DOM.obGoalInput.value = g;
+      tempOnboardData.goal = g;
+    });
+
+    DOM.obGoalInput.addEventListener('input', () => {
+      tempOnboardData.goal = Number(DOM.obGoalInput.value) || 2000;
+    });
+
+    DOM.onboardNext4.addEventListener('click', () => {
+      showOnboardingStep(4);
+    });
+
+    DOM.onboardFinishBtn.addEventListener('click', async () => {
+      const isReminderEnabled = DOM.obReminderToggle.checked;
+      if (isReminderEnabled && isNotificationSupported()) {
+        await requestNotificationPermission();
+      }
+
+      const finalSettings = {
+        onboarded: true,
+        weight: tempOnboardData.weight,
+        lifestyle: tempOnboardData.lifestyle,
+        goal: tempOnboardData.goal,
+        reminders: {
+          enabled: isReminderEnabled,
+          firstTime: DOM.obTime1.value || "11:30",
+          secondTime: DOM.obTime2.value || "17:00"
+        }
+      };
+
+      saveSettings(finalSettings);
+      DOM.onboardingScreen.classList.add('hidden');
+      renderHomePage();
+      playSuccessChime(true);
+      showToast("設定完成！水水小助理陪你開始喝水 💧");
+    });
+  }
+
+  function openSettingsSheet() {
+    const s = getSettings();
+    DOM.settingGoalVal.textContent = `${s.goal || 2000} mL`;
+    DOM.settingWeightVal.textContent = `${s.weight || 60} kg`;
+    DOM.settingLifestyleSelect.value = s.lifestyle || 'daily';
+    DOM.settingReminderToggle.checked = s.reminders ? s.reminders.enabled : true;
+    DOM.settingTime1.value = s.reminders?.firstTime || "11:30";
+    DOM.settingTime2.value = s.reminders?.secondTime || "17:00";
+    DOM.settingSoundToggle.checked = s.soundEnabled !== false;
+    DOM.settingVibrationToggle.checked = s.vibrationEnabled !== false;
+    DOM.settingsModal.classList.add('active');
+  }
+
+  function initPwaInstall() {
+    const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+    if (isIos && !isStandalone) {
+      DOM.pwaBanner.style.display = 'flex';
+      DOM.pwaBannerDesc.textContent = '請點下方「分享」➔「加入主畫面」';
+      DOM.pwaInstallBtn.textContent = '了解';
+      DOM.pwaInstallBtn.addEventListener('click', () => {
+        showToast('在 Safari 底部點選「分享按鈕」➔ 選擇「加入主畫面」即可安裝 💧');
+      });
+    }
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      DOM.pwaBanner.style.display = 'flex';
+      DOM.pwaInstallBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          const { outcome } = await deferredPrompt.userChoice;
+          if (outcome === 'accepted') {
+            DOM.pwaBanner.style.display = 'none';
+          }
+          deferredPrompt = null;
+        }
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initApp);
+  } else {
+    initApp();
+  }
+})();
+
+  </script>
 </body>
 </html>
