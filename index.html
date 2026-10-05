@@ -1462,6 +1462,164 @@ body {
 .numpad-btn.numpad-action:active {
   background: #E2ECE6;
 }
+/* =============================================
+   長輩大字體模式與全局字體放大
+   ============================================= */
+body {
+  font-size: 20px !important;
+}
+.brand-title {
+  font-size: 24px !important;
+}
+.brand-subtitle {
+  font-size: 16px !important;
+}
+.reminder-title {
+  font-size: 17px !important;
+}
+.reminder-badge {
+  font-size: 13.5px !important;
+}
+.reminder-text {
+  font-size: 18.5px !important;
+  line-height: 1.55 !important;
+}
+.stats-current {
+  font-size: 48px !important;
+}
+.stats-target {
+  font-size: 30px !important;
+}
+.stats-unit {
+  font-size: 18px !important;
+}
+.stats-status-badge {
+  font-size: 17px !important;
+  padding: 5px 16px !important;
+}
+.section-label {
+  font-size: 19px !important;
+}
+.undo-btn {
+  font-size: 16px !important;
+}
+.btn-amount {
+  font-size: 28px !important;
+  font-weight: 800 !important;
+}
+.btn-unit {
+  font-size: 15px !important;
+}
+.custom-water-btn {
+  font-size: 19px !important;
+  padding: 16px !important;
+}
+.history-title {
+  font-size: 19px !important;
+}
+.history-caption {
+  font-size: 15px !important;
+}
+.day-label {
+  font-size: 16px !important;
+}
+.drop-percent-badge {
+  font-size: 13px !important;
+}
+.history-footer-quote {
+  font-size: 16.5px !important;
+}
+.knowledge-tag {
+  font-size: 15px !important;
+}
+.knowledge-refresh-btn {
+  font-size: 15px !important;
+}
+.knowledge-text {
+  font-size: 18.5px !important;
+  line-height: 1.6 !important;
+}
+.footer-slogan {
+  font-size: 17px !important;
+}
+.footer-concept {
+  font-size: 14.5px !important;
+}
+
+/* 特大字體模式 (Senior Extra Large Font) */
+body.senior-large-font {
+  font-size: 23px !important;
+}
+body.senior-large-font .brand-title {
+  font-size: 28px !important;
+}
+body.senior-large-font .brand-subtitle {
+  font-size: 19px !important;
+}
+body.senior-large-font .reminder-title {
+  font-size: 20px !important;
+}
+body.senior-large-font .reminder-badge {
+  font-size: 15px !important;
+}
+body.senior-large-font .reminder-text {
+  font-size: 22px !important;
+  line-height: 1.65 !important;
+}
+body.senior-large-font .stats-current {
+  font-size: 58px !important;
+}
+body.senior-large-font .stats-target {
+  font-size: 36px !important;
+}
+body.senior-large-font .stats-status-badge {
+  font-size: 20px !important;
+  padding: 6px 20px !important;
+}
+body.senior-large-font .section-label {
+  font-size: 22px !important;
+}
+body.senior-large-font .btn-amount {
+  font-size: 34px !important;
+}
+body.senior-large-font .btn-unit {
+  font-size: 17px !important;
+}
+body.senior-large-font .custom-water-btn {
+  font-size: 22px !important;
+  padding: 18px !important;
+}
+body.senior-large-font .history-title {
+  font-size: 22px !important;
+}
+body.senior-large-font .history-caption {
+  font-size: 17px !important;
+}
+body.senior-large-font .day-label {
+  font-size: 19px !important;
+}
+body.senior-large-font .drop-percent-badge {
+  font-size: 15px !important;
+}
+body.senior-large-font .history-footer-quote {
+  font-size: 19px !important;
+}
+body.senior-large-font .knowledge-tag {
+  font-size: 18px !important;
+}
+body.senior-large-font .knowledge-refresh-btn {
+  font-size: 18px !important;
+}
+body.senior-large-font .knowledge-text {
+  font-size: 22px !important;
+  line-height: 1.7 !important;
+}
+body.senior-large-font .footer-slogan {
+  font-size: 20px !important;
+}
+body.senior-large-font .footer-concept {
+  font-size: 17px !important;
+}
 </style>
 </head>
 <body>
@@ -1481,6 +1639,9 @@ body {
         </div>
       </div>
       <div class="header-actions">
+        <button class="icon-btn" id="toggleFontBtn" title="切換特大字體模式" aria-label="大字體" style="font-size:15px; font-weight:800; width:48px;">
+          大字
+        </button>
         <button class="icon-btn" id="openSettingsBtn" aria-label="設定" title="設定">
           ⚙️
         </button>
@@ -2595,6 +2756,36 @@ function sendTestNotification() {
     }
 
     bindEvents();
+    // 大字體切換按鈕邏輯
+    const toggleFontBtn = document.getElementById('toggleFontBtn');
+    if (toggleFontBtn) {
+      if (localStorage.getItem('fit21_large_font') === 'true') {
+        document.body.classList.add('senior-large-font');
+        toggleFontBtn.style.background = 'var(--brand-green)';
+        toggleFontBtn.style.color = '#FFF';
+      }
+
+      toggleFontBtn.addEventListener('click', () => {
+        document.body.classList.toggle('senior-large-font');
+        const isLarge = document.body.classList.contains('senior-large-font');
+        localStorage.setItem('fit21_large_font', isLarge ? 'true' : 'false');
+        if (isLarge) {
+          toggleFontBtn.style.background = 'var(--brand-green)';
+          toggleFontBtn.style.color = '#FFF';
+          showToast("已切換為【特大字體模式】🔤");
+        } else {
+          toggleFontBtn.style.background = 'var(--bg-card)';
+          toggleFontBtn.style.color = 'var(--brand-green)';
+          showToast("已恢復為【標準字體】");
+        }
+      });
+    }
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(regs => {
+        for (let reg of regs) { reg.update(); }
+      }).catch(() => {});
+    }
     displayKnowledgeTip();
 
     let currentTrackedDate = getLocalDateString();
