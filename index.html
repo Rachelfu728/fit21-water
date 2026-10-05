@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Fit21 水水小助理 - 每天兩次，剛剛好的提醒</title>
+  
+  <!-- PWA & Mobile Meta Tags -->
+  <meta name="description" content="Fit21 水水小助理：簡單、溫暖、低干擾的每日喝水陪伴工具。適合 40~70 歲使用者，大字體、好操作。">
+  <meta name="theme-color" content="#0F6E56">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="水水小助理">
+  
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" type="image/png" href="./icons/favicon.png">
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+  
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+  <!-- 手機優先主容器 -->
+  <div id="app-container">
+    
+    <!-- 頂部標頭 -->
+    <header class="app-header">
+      <div class="header-brand">
+        <button class="brand-avatar-btn" id="avatarInteractBtn" title="點擊跟小助理打招呼">
+          <img src="./icons/character.jpg" alt="Fit21 水滴小助理" class="brand-avatar">
+        </button>
+        <div class="brand-info">
+          <h1 class="brand-title">Fit21 水水小助理 💧</h1>
+          <span class="brand-subtitle">今天也陪自己好好喝水。</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn" id="openSettingsBtn" aria-label="設定" title="設定">
+          ⚙️
+        </button>
+      </div>
+    </header>
+
+    <!-- 智慧叮嚀卡片 (隨時間與進度自動切換，不打擾) -->
+    <section class="smart-reminder-card" id="smartReminderCard">
+      <img src="./icons/character.jpg" alt="小助理叮嚀" class="reminder-avatar-small">
+      <div class="reminder-content">
+        <div class="reminder-header-row">
+          <span class="reminder-title" id="reminderCardTitle">早安 💧</span>
+          <span class="reminder-badge" id="reminderCardBadge">溫柔陪伴</span>
+        </div>
+        <p class="reminder-text" id="reminderCardText">早安！早晨先來一杯溫開水，開啟舒暢的一天。</p>
+      </div>
+    </section>
+
+    <!-- 中央水杯視覺主卡片 -->
+    <main class="water-display-card">
+      <div class="glass-container" id="glassContainer" title="點擊水杯也有鼓勵喔！">
+        <div class="water-fill" id="waterFill">
+          <!-- 平滑波浪動畫 -->
+          <svg class="wave-svg secondary" viewBox="0 0 500 20" preserveAspectRatio="none">
+            <path d="M 0 10 Q 125 0 250 10 T 500 10 L 500 20 L 0 20 Z"></path>
+          </svg>
+          <svg class="wave-svg" viewBox="0 0 500 20" preserveAspectRatio="none">
+            <path d="M 0 10 Q 125 20 250 10 T 500 10 L 500 20 L 0 20 Z"></path>
+          </svg>
+        </div>
+        
+        <!-- 玻璃高光反光與刻度 -->
+        <div class="glass-reflection"></div>
+        <div class="glass-marks">
+          <div class="mark-line"></div>
+          <div class="mark-line"></div>
+          <div class="mark-line"></div>
+          <div class="mark-line"></div>
+        </div>
+
+        <!-- 水杯中央百分比 -->
+        <div class="glass-center-stat">
+          <div class="glass-percent" id="glassPercent">0%</div>
+        </div>
+      </div>
+
+      <!-- 水量數值資訊 -->
+      <div class="water-stats-info">
+        <div class="stats-amount-row">
+          <span class="stats-current" id="currentAmountDisplay">0</span>
+          <span class="stats-divider">/</span>
+          <span class="stats-target" id="targetAmountDisplay">2000</span>
+          <span class="stats-unit">mL</span>
+        </div>
+        <div class="stats-status-text">
+          <span class="stats-status-badge" id="statusPercentBadge">今天已經完成 0%</span>
+        </div>
+      </div>
+    </main>
+
+    <!-- 快速紀錄喝水區 (三個大按鈕 + 復原上一筆) -->
+    <section class="quick-log-section">
+      <div class="section-label-row">
+        <span class="section-label">快速喝水紀錄</span>
+        <button class="undo-btn" id="undoBtn" disabled title="復原上一筆紀錄">
+          <span>↩</span> <span id="undoBtnText">復原上一筆</span>
+        </button>
+      </div>
+
+      <div class="quick-buttons-grid">
+        <button class="water-btn-large" id="quickBtn0" data-index="0">
+          <span class="btn-icon">🥛</span>
+          <span class="btn-amount" id="quickAmount0">＋200</span>
+          <span class="btn-unit">mL</span>
+        </button>
+        <button class="water-btn-large" id="quickBtn1" data-index="1">
+          <span class="btn-icon">🫗</span>
+          <span class="btn-amount" id="quickAmount1">＋300</span>
+          <span class="btn-unit">mL</span>
+        </button>
+        <button class="water-btn-large" id="quickBtn2" data-index="2">
+          <span class="btn-icon">🍶</span>
+          <span class="btn-amount" id="quickAmount2">＋500</span>
+          <span class="btn-unit">mL</span>
+        </button>
+      </div>
+
+      <button class="custom-water-btn" id="openCustomModalBtn">
+        <span>✏️ 自訂喝水量 (輸入其他 mL)</span>
+      </button>
+    </section>
+
+    <!-- 最近 7 天紀錄水滴 -->
+    <section class="history-card">
+      <div class="history-header">
+        <span class="history-title">💧 最近 7 天紀錄</span>
+        <span class="history-caption">達標為藍色水滴</span>
+      </div>
+      <div class="history-drops-row" id="historyDropsRow">
+        <!-- 由 JavaScript 動態生成 7 天水滴 -->
+      </div>
+      <div class="history-footer-quote">
+        「原來我已經連續好幾天有記得喝水。」
+      </div>
+    </section>
+
+    <!-- 喝水小知識輪播卡片 (30則無誇大科學好習慣) -->
+    <section class="knowledge-card">
+      <div class="knowledge-header">
+        <span class="knowledge-tag">💡 今天的小知識 💧</span>
+        <button class="knowledge-refresh-btn" id="refreshKnowledgeBtn">
+          換一則 ↻
+        </button>
+      </div>
+      <p class="knowledge-text" id="knowledgeTipText">
+        水分是維持身體正常生理機能與代謝的重要元素。
+      </p>
+    </section>
+
+    <!-- PWA 安裝指引橫幅 (支援時顯示) -->
+    <div class="pwa-install-banner" id="pwaBanner" style="display: none;">
+      <div class="pwa-banner-content">
+        <span class="pwa-banner-icon">📱</span>
+        <div>
+          <div class="pwa-banner-title">把小助理加到手機主畫面</div>
+          <div class="pwa-banner-desc" id="pwaBannerDesc">點擊即可像 App 一樣快速打開</div>
+        </div>
+      </div>
+      <button class="pwa-install-btn" id="pwaInstallBtn">安裝</button>
+    </div>
+
+    <!-- 頁尾品牌與標語 -->
+    <footer class="app-footer">
+      <div class="footer-slogan">「每天兩次，剛剛好的提醒。」</div>
+      <div class="footer-concept">不是一直催你喝水，而是在需要的時候，溫柔提醒你。</div>
+    </footer>
+
+  </div>
+
+  <!-- 互動鼓勵浮動吐司 (短促鼓勵語句) -->
+  <div class="toast-bubble" id="toastBubble">
+    <span id="toastIcon">💧</span>
+    <span id="toastMessage">收到 💧</span>
+  </div>
+
+  <!-- ─────────────────────────────
+       達標慶祝彈窗 (100% 完成)
+       ───────────────────────────── -->
+  <div class="modal-overlay" id="celebrationModal">
+    <div class="celebrate-dialog">
+      <img src="./icons/character.jpg" alt="Fit21 小助理慶祝" class="celebrate-avatar">
+      <h2 class="celebrate-title">今天完成了！💧</h2>
+      <p class="celebrate-subtitle">謝謝你今天也有好好照顧自己。</p>
+      
+      <div class="celebrate-stat-box">
+        <div class="celebrate-stat-label">今日完成喝水量</div>
+        <div class="celebrate-stat-val" id="celebrateStatVal">2200 / 2200 mL</div>
+      </div>
+
+      <button class="btn-primary-large" id="closeCelebrationBtn">
+        太棒了，收下這份溫暖 ✨
+      </button>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────
+       自訂水量彈窗 (Custom Amount)
+       ───────────────────────────── -->
+  <div class="modal-overlay" id="customAmountModal">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title">✏️ 輸入喝水量</h3>
+        <button class="modal-close-btn" id="closeCustomModalBtn">✕</button>
+      </div>
+
+      <div class="number-stepper-box">
+        <button class="stepper-btn" id="customMinusBtn">－</button>
+        <div class="stepper-value-wrap">
+          <input type="number" class="stepper-input" id="customInput" value="250" min="10" max="2000" step="50">
+          <span class="stepper-unit">mL</span>
+        </div>
+        <button class="stepper-btn" id="customPlusBtn">＋</button>
+      </div>
+
+      <div class="custom-quick-grid">
+        <button class="preset-chip-btn" data-preset="100">100 mL</button>
+        <button class="preset-chip-btn" data-preset="150">150 mL</button>
+        <button class="preset-chip-btn" data-preset="250">250 mL</button>
+        <button class="preset-chip-btn" data-preset="350">350 mL</button>
+        <button class="preset-chip-btn" data-preset="400">400 mL</button>
+        <button class="preset-chip-btn" data-preset="600">600 mL</button>
+      </div>
+
+      <button class="btn-primary-large" id="submitCustomAmountBtn">
+        確認記錄這杯水 💧
+      </button>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────
+       設定彈窗 (Settings)
+       ───────────────────────────── -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title">⚙️ 小助理設定</h3>
+        <button class="modal-close-btn" id="closeSettingsModalBtn">✕</button>
+      </div>
+
+      <!-- 目標與體重 -->
+      <div class="settings-section-card">
+        <div class="settings-section-title">我的喝水目標</div>
+        
+        <div class="settings-item-row">
+          <div>
+            <div class="settings-item-label">每日喝水目標</div>
+            <div class="settings-item-desc">隨時自由調整適合自己的目標</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <button class="stepper-btn" style="width:40px; height:40px; font-size:20px;" id="settingGoalMinus">－</button>
+            <span style="font-size:18px; font-weight:800; color:var(--brand-green); min-width:70px; text-align:center;" id="settingGoalVal">2000 mL</span>
+            <button class="stepper-btn" style="width:40px; height:40px; font-size:20px;" id="settingGoalPlus">＋</button>
+          </div>
+        </div>
+
+        <div class="settings-item-row">
+          <div>
+            <div class="settings-item-label">我的體重 (kg)</div>
+            <div class="settings-item-desc">用來計算建議起始參考</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <button class="stepper-btn" style="width:40px; height:40px; font-size:20px;" id="settingWeightMinus">－</button>
+            <span style="font-size:18px; font-weight:800; color:var(--brand-green); min-width:60px; text-align:center;" id="settingWeightVal">60 kg</span>
+            <button class="stepper-btn" style="width:40px; height:40px; font-size:20px;" id="settingWeightPlus">＋</button>
+          </div>
+        </div>
+
+        <div class="settings-item-row">
+          <div>
+            <div class="settings-item-label">生活狀態</div>
+          </div>
+          <select id="settingLifestyleSelect" style="font-size:16px; font-weight:700; color:var(--brand-green); border:1.5px solid var(--border-light); border-radius:12px; padding:6px 10px; background:#FFF;">
+            <option value="daily">日常健康 (×33 mL)</option>
+            <option value="weight_mgmt">體重管理 (×36 mL)</option>
+            <option value="active">規律運動 (×40 mL)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 一天兩次提醒設定 -->
+      <div class="settings-section-card">
+        <div class="settings-section-title">一天兩次提醒設定</div>
+
+        <div class="settings-item-row">
+          <div>
+            <div class="settings-item-label">開啟溫柔提醒</div>
+            <div class="settings-item-desc">時間到且未達標才溫和提醒</div>
+          </div>
+          <label class="switch-label">
+            <input type="checkbox" class="switch-checkbox" id="settingReminderToggle" checked>
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+
+        <div class="reminder-time-row">
+          <span class="reminder-time-label">第一次提醒時間</span>
+          <input type="time" class="reminder-time-input" id="settingTime1" value="11:30">
+        </div>
+
+        <div class="reminder-time-row">
+          <span class="reminder-time-label">第二次提醒時間</span>
+          <input type="time" class="reminder-time-input" id="settingTime2" value="17:00">
+        </div>
+
+        <div style="margin-top: 12px;">
+          <button class="btn-secondary-large" id="testNotificationBtn" style="font-size:15px; min-height:44px;">
+            🔔 測試發送提醒通知
+          </button>
+        </div>
+      </div>
+
+      <!-- 音效與震動 -->
+      <div class="settings-section-card">
+        <div class="settings-section-title">回饋感官體驗</div>
+
+        <div class="settings-item-row">
+          <div>
+            <div class="settings-item-label">清脆水滴音效</div>
+            <div class="settings-item-desc">紀錄時播放溫和水滴聲</div>
+          </div>
+          <label class="switch-label">
+            <input type="checkbox" class="switch-checkbox" id="settingSoundToggle" checked>
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+
+        <div class="settings-item-row">
+          <div>
+            <div class="settings-item-label">輕微觸覺震動</div>
+            <div class="settings-item-desc">手機按壓時提供觸覺確認</div>
+          </div>
+          <label class="switch-label">
+            <input type="checkbox" class="switch-checkbox" id="settingVibrationToggle" checked>
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- 重新設定 -->
+      <div style="margin-top: 18px;">
+        <button class="btn-primary-large" id="saveAndCloseSettingsBtn">
+          儲存並完成
+        </button>
+        <button class="btn-secondary-large" id="restartOnboardingBtn" style="border-color:#D0DCD6; color:var(--text-sub); margin-top:12px;">
+          ↺ 重新進行歡迎設定引導
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────
+       首次使用設定引導精靈 (Onboarding Wizard)
+       ───────────────────────────── -->
+  <section class="onboarding-screen hidden" id="onboardingScreen">
+    
+    <!-- 步驟 1: 歡迎介紹 -->
+    <div class="onboarding-step active" id="onboardingStep1">
+      <img src="./icons/character.jpg" alt="Fit21 水滴小助理" class="onboarding-character-hero">
+      <h2 class="onboarding-title">嗨！我是你的<br>Fit21 水水小助理 💧</h2>
+      <p class="onboarding-desc">
+        先讓我知道一點點你的生活狀況，<br>我會幫你設定一個適合開始的喝水目標。
+      </p>
+      <button class="btn-primary-large" id="onboardNext1">
+        開始設定 ➔
+      </button>
+    </div>
+
+    <!-- 步驟 2: 詢問體重 -->
+    <div class="onboarding-step" id="onboardingStep2">
+      <h2 class="onboarding-title">你的體重是多少？</h2>
+      <p class="onboarding-desc">
+        體重是計算每日水分基本需求的重要參考。
+      </p>
+
+      <div class="number-stepper-box">
+        <button class="stepper-btn" id="obWeightMinus">－</button>
+        <div class="stepper-value-wrap">
+          <input type="number" class="stepper-input" id="obWeightInput" value="60" min="30" max="200">
+          <span class="stepper-unit">kg</span>
+        </div>
+        <button class="stepper-btn" id="obWeightPlus">＋</button>
+      </div>
+
+      <button class="btn-primary-large" id="onboardNext2">
+        下一步 ➔
+      </button>
+    </div>
+
+    <!-- 步驟 3: 詢問生活狀態 & 顯示起始參考 -->
+    <div class="onboarding-step" id="onboardingStep3">
+      <h2 class="onboarding-title">目前比較接近你的生活狀態是？</h2>
+      <p class="onboarding-desc">選擇一個最符合你平時作息的型態：</p>
+
+      <div class="lifestyle-options-grid">
+        <div class="lifestyle-card selected" data-lifestyle="daily" id="obLifeDaily">
+          <div class="lifestyle-icon-circle">🌿</div>
+          <div>
+            <div class="lifestyle-title">① 日常健康</div>
+            <div class="lifestyle-desc">一般室內辦公、居家、維持健康水分</div>
+          </div>
+        </div>
+
+        <div class="lifestyle-card" data-lifestyle="weight_mgmt" id="obLifeWeight">
+          <div class="lifestyle-icon-circle">🥗</div>
+          <div>
+            <div class="lifestyle-title">② 體重管理</div>
+            <div class="lifestyle-desc">正在進行飲食調節或體態維持</div>
+          </div>
+        </div>
+
+        <div class="lifestyle-card" data-lifestyle="active" id="obLifeActive">
+          <div class="lifestyle-icon-circle">🏃</div>
+          <div>
+            <div class="lifestyle-title">③ 規律運動</div>
+            <div class="lifestyle-desc">有固定運動習慣、或工作流汗較多</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 計算參考結果卡片 -->
+      <div class="calc-result-box">
+        <div class="calc-result-title">依照你目前的設定，今天可以先從約</div>
+        <div class="calc-result-highlight" id="obSuggestedDisplay">2000 mL</div>
+        <div class="calc-result-title">開始。</div>
+        <div class="calc-disclaimer">
+          ※ 實際需要量會因活動量、天氣、飲食及個人狀況不同而有所差異。<br>
+          ※ 若醫師曾交代需要限制飲水，請依醫療專業建議為準。
+        </div>
+      </div>
+
+      <button class="btn-primary-large" id="onboardNext3">
+        設定我的目標 ➔
+      </button>
+    </div>
+
+    <!-- 步驟 4: 設定「我的每日目標」 -->
+    <div class="onboarding-step" id="onboardingStep4">
+      <h2 class="onboarding-title">我的每日喝水目標</h2>
+      <p class="onboarding-desc">
+        系統為你算出建議值，你可以隨時按 ＋ 或 － 微調成自己舒適的量：
+      </p>
+
+      <div class="number-stepper-box">
+        <button class="stepper-btn" id="obGoalMinus">－ 100</button>
+        <div class="stepper-value-wrap">
+          <input type="number" class="stepper-input" id="obGoalInput" value="2000" min="500" max="5000" step="100">
+          <span class="stepper-unit">mL</span>
+        </div>
+        <button class="stepper-btn" id="obGoalPlus">＋ 100</button>
+      </div>
+
+      <p style="font-size:14px; color:var(--text-sub); margin-bottom:20px;">
+        💡 你永遠可以在設定中修改自己的每日目標。
+      </p>
+
+      <button class="btn-primary-large" id="onboardNext4">
+        就從這個目標開始 ➔
+      </button>
+    </div>
+
+    <!-- 步驟 5: 提醒設定 (每天只提醒兩次) -->
+    <div class="onboarding-step" id="onboardingStep5">
+      <h2 class="onboarding-title">每天兩次，剛剛好的提醒</h2>
+      <p class="onboarding-desc">
+        我們不想一直打擾你，<br>所以一天只陪你確認兩次 💧
+      </p>
+
+      <div class="reminder-setup-card">
+        <div class="reminder-time-row">
+          <span class="reminder-time-label">第一次提醒時間：</span>
+          <input type="time" class="reminder-time-input" id="obTime1" value="11:30">
+        </div>
+        <div class="reminder-time-row">
+          <span class="reminder-time-label">第二次提醒時間：</span>
+          <input type="time" class="reminder-time-input" id="obTime2" value="17:00">
+        </div>
+        <div class="toggle-switch-row">
+          <span class="reminder-time-label">☑ 開啟溫柔提醒</span>
+          <label class="switch-label">
+            <input type="checkbox" class="switch-checkbox" id="obReminderToggle" checked>
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <button class="btn-primary-large" id="onboardFinishBtn">
+        完成設定，開始喝水！💧
+      </button>
+    </div>
+
+  </section>
+
+  <!-- PWA Service Worker 註冊與核心邏輯模組 -->
+  <script src="./js/bundle.js"></script>
+</body>
+</html>

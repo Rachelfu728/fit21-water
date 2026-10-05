@@ -1,0 +1,1326 @@
+/* 
+  Fit21 水水小助理 - 核心樣式表
+  品牌色調：奶油米白 #FBF6EC、Fit21 深綠 #0F6E56、鼠尾草綠 #93A68D、清爽水藍、淡金色 #C9A86A
+  目標：適合 40~70 歲使用者，大字體、大按鈕、溫潤圓角、高對比易讀、零學習門檻
+*/
+
+:root {
+  --bg-cream: #FBF6EC;
+  --bg-card: #FFFFFF;
+  --bg-card-subtle: #F5EFE4;
+  --brand-green: #0F6E56;
+  --brand-green-hover: #0C5945;
+  --brand-green-light: #E4F1EC;
+  --sage-green: #93A68D;
+  --sage-green-light: #E8ECE6;
+  --water-blue: #4FA8DE;
+  --water-blue-dark: #2F88C0;
+  --water-blue-light: #EBF5FB;
+  --water-blue-surface: #D8EEF9;
+  --gold-accent: #C9A86A;
+  --gold-light: #F9F5EC;
+  --text-main: #1C332B;
+  --text-sub: #576F66;
+  --text-muted: #83978E;
+  --border-light: rgba(15, 110, 86, 0.12);
+  --shadow-sm: 0 4px 12px rgba(15, 110, 86, 0.05);
+  --shadow-md: 0 10px 28px rgba(15, 110, 86, 0.08);
+  --shadow-lg: 0 18px 40px rgba(15, 110, 86, 0.14);
+  --radius-sm: 14px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
+  --radius-full: 9999px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* 全域重設與防縮放 */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100%;
+  background-color: var(--bg-cream);
+  color: var(--text-main);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  font-size: 17px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* 手機容器 (Mobile First，居中最大 480px，電腦螢幕上呈現優雅手機外觀) */
+#app-container {
+  width: 100%;
+  max-width: 460px;
+  min-height: 100vh;
+  margin: 0 auto;
+  background-color: var(--bg-cream);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.04);
+  padding: calc(var(--safe-top) + 12px) 18px calc(var(--safe-bottom) + 28px) 18px;
+}
+
+/* 頂部標頭 */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding: 4px 2px;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-avatar-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+}
+
+.brand-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2.5px solid var(--brand-green);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.brand-avatar-btn:active .brand-avatar {
+  transform: scale(0.92);
+}
+
+.brand-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--brand-green);
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.brand-subtitle {
+  font-size: 13.5px;
+  color: var(--text-sub);
+  font-weight: 500;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--brand-green);
+  font-size: 20px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+}
+
+.icon-btn:active {
+  transform: scale(0.92);
+  background: var(--brand-green-light);
+}
+
+/* 小助理即時提醒氣泡 / 智慧叮嚀卡片 */
+.smart-reminder-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.smart-reminder-card.completed {
+  background: #F0F8F4;
+  border-color: #BBE1D4;
+}
+
+.smart-reminder-card.night-rest {
+  background: #F4F6F9;
+  border-color: #D3DFE8;
+}
+
+.reminder-avatar-small {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1.5px solid var(--brand-green);
+}
+
+.reminder-content {
+  flex: 1;
+}
+
+.reminder-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+
+.reminder-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--brand-green);
+}
+
+.reminder-badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  background: var(--sage-green-light);
+  color: var(--brand-green);
+  border-radius: var(--radius-full);
+  font-weight: 600;
+}
+
+.reminder-text {
+  font-size: 15px;
+  color: var(--text-main);
+  line-height: 1.45;
+  font-weight: 500;
+}
+
+/* 互動鼓勵浮動吐司 (操作後出現) */
+.toast-bubble {
+  position: fixed;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-10px);
+  background: var(--brand-green);
+  color: #FFFFFF;
+  padding: 10px 22px;
+  border-radius: var(--radius-full);
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: var(--shadow-md);
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toast-bubble.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* 中央水杯視覺主卡片 */
+.water-display-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 24px 20px 20px 20px;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 玻璃水杯容器 (圓潤大氣) */
+.glass-container {
+  width: 170px;
+  height: 220px;
+  background: #F4FAFD;
+  border: 4px solid #D2EBF8;
+  border-top: 5px solid #C1E4F5;
+  border-radius: 20px 20px 48px 48px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 2px 10px rgba(79, 168, 222, 0.12), 0 8px 24px rgba(79, 168, 222, 0.15);
+  margin-bottom: 18px;
+  cursor: pointer;
+}
+
+/* 水位主體 */
+.water-fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 0%;
+  background: linear-gradient(180deg, #74C0FC 0%, #4FA8DE 55%, #2F88C0 100%);
+  transition: height 0.8s cubic-bezier(0.34, 1.3, 0.64, 1);
+}
+
+/* 波浪動畫 */
+.wave-svg {
+  position: absolute;
+  top: -14px;
+  left: 0;
+  width: 200%;
+  height: 18px;
+  fill: #74C0FC;
+  animation: waveAnim 4s linear infinite;
+  opacity: 0.9;
+}
+
+.wave-svg.secondary {
+  top: -12px;
+  animation: waveAnim 3s linear infinite reverse;
+  opacity: 0.55;
+  fill: #A5D8FF;
+}
+
+@keyframes waveAnim {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* 玻璃高光反光效果 */
+.glass-reflection {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  width: 8px;
+  height: 80%;
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+/* 水杯刻度線 */
+.glass-marks {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  pointer-events: none;
+}
+
+.mark-line {
+  width: 10px;
+  height: 2px;
+  background: rgba(79, 168, 222, 0.35);
+  border-radius: 1px;
+}
+
+/* 水杯內數值層 (疊在水杯上方更直觀) */
+.glass-center-stat {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  text-align: center;
+  pointer-events: none;
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
+}
+
+.glass-percent {
+  font-size: 34px;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1;
+}
+
+/* 水量數值資訊 */
+.water-stats-info {
+  text-align: center;
+  width: 100%;
+}
+
+.stats-amount-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.stats-current {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--brand-green);
+  letter-spacing: -0.5px;
+}
+
+.stats-divider {
+  font-size: 22px;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.stats-target {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-sub);
+}
+
+.stats-unit {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-sub);
+  margin-left: 2px;
+}
+
+.stats-status-text {
+  font-size: 16px;
+  color: var(--text-sub);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.stats-status-badge {
+  background: var(--brand-green-light);
+  color: var(--brand-green);
+  padding: 3px 12px;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* 快速喝水按鈕區 (三大按鈕，專門適合 40~70 歲長輩與手機快速點擊) */
+.quick-log-section {
+  margin-bottom: 20px;
+}
+
+.section-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding: 0 4px;
+}
+
+.section-label {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-sub);
+}
+
+.undo-btn {
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: var(--sage-green);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+}
+
+.undo-btn:hover, .undo-btn:active {
+  background: var(--sage-green-light);
+  color: var(--brand-green);
+}
+
+.undo-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* 三個大按鈕網格 */
+.quick-buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.water-btn-large {
+  background: var(--bg-card);
+  border: 2px solid #E2EFE9;
+  border-radius: var(--radius-md);
+  padding: 16px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  min-height: 84px;
+}
+
+.water-btn-large:hover {
+  border-color: var(--brand-green);
+  background: #FCFEFD;
+}
+
+.water-btn-large:active {
+  transform: scale(0.94);
+  background: var(--brand-green-light);
+  border-color: var(--brand-green);
+}
+
+.btn-icon {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.btn-amount {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--brand-green);
+  letter-spacing: -0.5px;
+}
+
+.btn-unit {
+  font-size: 12px;
+  color: var(--text-sub);
+  font-weight: 600;
+}
+
+/* 自訂水量按鈕 (通欄大按鈕) */
+.custom-water-btn {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1.5px dashed var(--sage-green);
+  color: var(--brand-green);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.custom-water-btn:active {
+  background: var(--sage-green-light);
+  transform: scale(0.98);
+}
+
+/* 7天歷史水滴卡片 */
+.history-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 18px 16px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 20px;
+}
+
+.history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.history-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.history-caption {
+  font-size: 12.5px;
+  color: var(--text-sub);
+  font-weight: 500;
+}
+
+.history-drops-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.history-day-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.day-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-sub);
+}
+
+.history-day-item.today .day-label {
+  color: var(--brand-green);
+  font-weight: 800;
+}
+
+.drop-icon-wrapper {
+  width: 40px;
+  height: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+.drop-svg {
+  width: 32px;
+  height: 38px;
+  transition: fill 0.3s ease;
+}
+
+.drop-svg.completed {
+  fill: var(--water-blue);
+  filter: drop-shadow(0 3px 6px rgba(79, 168, 222, 0.4));
+}
+
+.drop-svg.incomplete {
+  fill: #E3EBE6;
+}
+
+.drop-percent-badge {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.history-footer-quote {
+  font-size: 13.5px;
+  color: var(--text-sub);
+  text-align: center;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(15, 110, 86, 0.1);
+  font-weight: 500;
+}
+
+/* 喝水小知識輪播卡片 */
+.knowledge-card {
+  background: var(--bg-card-subtle);
+  border: 1px solid rgba(201, 168, 106, 0.25);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.knowledge-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.knowledge-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--brand-green);
+  background: rgba(15, 110, 86, 0.08);
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+}
+
+.knowledge-refresh-btn {
+  background: none;
+  border: none;
+  font-size: 13px;
+  color: var(--text-sub);
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.knowledge-text {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--text-main);
+  font-weight: 500;
+}
+
+/* PWA 安裝橫幅提示 (非強迫，溫柔指引) */
+.pwa-install-banner {
+  background: #FFFDF9;
+  border: 1.5px solid var(--gold-accent);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.pwa-banner-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pwa-banner-icon {
+  font-size: 26px;
+}
+
+.pwa-banner-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--brand-green);
+}
+
+.pwa-banner-desc {
+  font-size: 12.5px;
+  color: var(--text-sub);
+}
+
+.pwa-install-btn {
+  background: var(--brand-green);
+  color: #FFF;
+  border: none;
+  padding: 8px 14px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* 頁尾品牌宣告與理念 */
+.app-footer {
+  text-align: center;
+  padding: 16px 0 8px 0;
+  margin-top: auto;
+}
+
+.footer-slogan {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--brand-green);
+  margin-bottom: 4px;
+}
+
+.footer-concept {
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+/* ─────────────────────────────
+   彈窗 / 模態框系統 (Modals)
+   ───────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 45, 35, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 999;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-sheet {
+  width: 100%;
+  max-width: 460px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--bg-cream);
+  border-radius: 28px 28px 0 0;
+  padding: 24px 20px calc(var(--safe-bottom) + 24px) 20px;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.15);
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.32, 1, 0.32, 1);
+}
+
+.modal-overlay.active .modal-sheet {
+  transform: translateY(0);
+}
+
+/* 模態框標頭 */
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.modal-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--brand-green);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-close-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-sub);
+}
+
+/* 達標慶祝彈窗 (Center Dialog) */
+.celebrate-dialog {
+  width: 90%;
+  max-width: 360px;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 30px 22px;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  transform: scale(0.85);
+  opacity: 0;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  margin: auto;
+}
+
+.modal-overlay.active .celebrate-dialog {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.celebrate-avatar {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--brand-green);
+  box-shadow: 0 8px 24px rgba(15, 110, 86, 0.2);
+  margin-bottom: 16px;
+  animation: bounceGently 2s ease-in-out infinite;
+}
+
+@keyframes bounceGently {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.celebrate-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--brand-green);
+  margin-bottom: 8px;
+}
+
+.celebrate-subtitle {
+  font-size: 16px;
+  color: var(--text-sub);
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.celebrate-stat-box {
+  background: var(--brand-green-light);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  margin-bottom: 24px;
+}
+
+.celebrate-stat-label {
+  font-size: 13px;
+  color: var(--brand-green);
+  font-weight: 600;
+}
+
+.celebrate-stat-val {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--brand-green);
+}
+
+/* ─────────────────────────────
+   首次引導設定精靈 (Onboarding)
+   ───────────────────────────── */
+.onboarding-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-cream);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: calc(var(--safe-top) + 20px) 24px calc(var(--safe-bottom) + 30px) 24px;
+}
+
+.onboarding-screen.hidden {
+  display: none !important;
+}
+
+.onboarding-step {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 420px;
+  width: 100%;
+  margin: auto;
+}
+
+.onboarding-step.active {
+  display: flex;
+  animation: fadeInStep 0.4s ease forwards;
+}
+
+@keyframes fadeInStep {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.onboarding-character-hero {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 5px solid var(--brand-green);
+  box-shadow: var(--shadow-lg);
+  margin-bottom: 24px;
+  animation: floatHero 3s ease-in-out infinite;
+}
+
+@keyframes floatHero {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.onboarding-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--brand-green);
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+.onboarding-desc {
+  font-size: 16.5px;
+  color: var(--text-sub);
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+/* 大按鈕設定 (全域主要行動按鈕) */
+.btn-primary-large {
+  width: 100%;
+  min-height: 58px;
+  background: var(--brand-green);
+  color: #FFFFFF;
+  border: none;
+  border-radius: var(--radius-full);
+  font-size: 19px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(15, 110, 86, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.2s ease;
+  margin-top: 16px;
+}
+
+.btn-primary-large:active {
+  transform: scale(0.97);
+  background: var(--brand-green-hover);
+}
+
+.btn-secondary-large {
+  width: 100%;
+  min-height: 52px;
+  background: var(--bg-card);
+  border: 1.5px solid var(--brand-green);
+  color: var(--brand-green);
+  border-radius: var(--radius-full);
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.btn-secondary-large:active {
+  background: var(--brand-green-light);
+}
+
+/* 大型數字輸入步進器 (體重、目標) */
+.number-stepper-box {
+  background: var(--bg-card);
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 24px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 24px;
+}
+
+.stepper-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--brand-green-light);
+  border: none;
+  color: var(--brand-green);
+  font-size: 28px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.stepper-btn:active {
+  background: var(--brand-green);
+  color: #FFF;
+  transform: scale(0.92);
+}
+
+.stepper-value-wrap {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+}
+
+.stepper-input {
+  font-size: 44px;
+  font-weight: 800;
+  color: var(--brand-green);
+  border: none;
+  background: transparent;
+  width: 140px;
+  text-align: center;
+  font-family: inherit;
+  outline: none;
+}
+
+.stepper-unit {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-sub);
+}
+
+/* 生活狀態三大選項卡片 */
+.lifestyle-options-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.lifestyle-card {
+  background: var(--bg-card);
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.lifestyle-card.selected {
+  border-color: var(--brand-green);
+  background: var(--brand-green-light);
+}
+
+.lifestyle-icon-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #FFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.lifestyle-card.selected .lifestyle-icon-circle {
+  background: var(--brand-green);
+  color: #FFF;
+}
+
+.lifestyle-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 2px;
+}
+
+.lifestyle-desc {
+  font-size: 13.5px;
+  color: var(--text-sub);
+}
+
+/* 計算結果建議卡片 */
+.calc-result-box {
+  background: #FCF9F2;
+  border: 1.5px solid var(--gold-accent);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  width: 100%;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.calc-result-title {
+  font-size: 15px;
+  color: var(--text-sub);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.calc-result-highlight {
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--brand-green);
+  margin-bottom: 12px;
+}
+
+.calc-disclaimer {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  border-top: 1px dashed rgba(201, 168, 106, 0.35);
+  padding-top: 10px;
+}
+
+/* 提醒設定卡片 */
+.reminder-setup-card {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 20px 18px;
+  width: 100%;
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.reminder-time-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(15, 110, 86, 0.08);
+}
+
+.reminder-time-row:last-child {
+  border-bottom: none;
+}
+
+.reminder-time-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.reminder-time-input {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--brand-green);
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  background: #FAFCFB;
+  font-family: inherit;
+  outline: none;
+}
+
+.toggle-switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0 6px 0;
+}
+
+/* 現代切換開關 (Toggle Switch) */
+.switch-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.switch-checkbox {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.switch-slider {
+  width: 52px;
+  height: 30px;
+  background: #D8E2DC;
+  border-radius: var(--radius-full);
+  position: relative;
+  transition: background 0.25s ease;
+}
+
+.switch-slider::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  background: #FFFFFF;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.switch-checkbox:checked + .switch-slider {
+  background: var(--brand-green);
+}
+
+.switch-checkbox:checked + .switch-slider::before {
+  transform: translateX(22px);
+}
+
+/* 設定頁清單區塊 */
+.settings-section-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.settings-section-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--sage-green);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+.settings-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(15, 110, 86, 0.06);
+}
+
+.settings-item-row:last-child {
+  border-bottom: none;
+}
+
+.settings-item-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.settings-item-desc {
+  font-size: 12.5px;
+  color: var(--text-sub);
+}
+
+/* 自訂容量彈窗數字鍵盤或按鈕 */
+.custom-quick-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.preset-chip-btn {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--brand-green);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.preset-chip-btn:active {
+  background: var(--brand-green);
+  color: #FFF;
+}
