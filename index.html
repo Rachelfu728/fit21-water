@@ -91,26 +91,114 @@ body {
 }
 
 /* 手機優先主容器：手機上 100% 滿版大畫面，電腦上才限制 480px */
+/* 滿版滿版！手機上 100% 徹底填滿螢幕，絕不縮小留白！ */
 #app-container {
-  width: 100%;
+  width: 100% !important;
+  max-width: 100% !important;
   min-height: 100vh;
   min-height: 100dvh;
-  margin: 0 auto;
+  margin: 0 !important;
   background-color: var(--bg-cream);
   display: flex;
   flex-direction: column;
   position: relative;
   box-sizing: border-box;
-  padding: calc(var(--safe-top) + 12px) 16px calc(var(--safe-bottom) + 24px) 16px;
+  padding: calc(var(--safe-top) + 16px) 16px calc(var(--safe-bottom) + 30px) 16px !important;
 }
 
-@media (min-width: 600px) {
+@media (min-width: 768px) {
   #app-container {
-    max-width: 480px;
+    max-width: 560px !important;
     box-shadow: 0 0 40px rgba(0, 0, 0, 0.08);
     border-radius: 28px;
-    margin: 20px auto;
+    margin: 20px auto !important;
   }
+}
+
+/* 水杯大氣放大 */
+.glass-container {
+  width: 200px !important;
+  height: 250px !important;
+}
+
+.glass-percent {
+  font-size: 46px !important;
+}
+
+.stats-current {
+  font-size: 52px !important;
+}
+
+.stats-target {
+  font-size: 32px !important;
+}
+
+.stats-unit {
+  font-size: 19px !important;
+}
+
+.stats-status-badge {
+  font-size: 18px !important;
+  padding: 6px 18px !important;
+}
+
+/* 三大按鈕大氣放大 */
+.water-btn-large {
+  min-height: 105px !important;
+  padding: 18px 8px !important;
+}
+
+.btn-icon {
+  font-size: 32px !important;
+}
+
+.btn-amount {
+  font-size: 30px !important;
+  font-weight: 800 !important;
+}
+
+.btn-unit {
+  font-size: 16px !important;
+}
+
+.custom-water-btn {
+  font-size: 20px !important;
+  padding: 18px !important;
+  min-height: 60px !important;
+}
+
+.reminder-title {
+  font-size: 18px !important;
+}
+
+.reminder-text {
+  font-size: 19px !important;
+  line-height: 1.6 !important;
+}
+
+.history-title {
+  font-size: 20px !important;
+}
+
+.day-label {
+  font-size: 17px !important;
+}
+
+.drop-percent-badge {
+  font-size: 14px !important;
+}
+
+.history-footer-quote {
+  font-size: 17px !important;
+}
+
+.knowledge-tag {
+  font-size: 16px !important;
+}
+
+.knowledge-text {
+  font-size: 19px !important;
+  line-height: 1.65 !important;
 }
 
 /* 頂部標頭 */
